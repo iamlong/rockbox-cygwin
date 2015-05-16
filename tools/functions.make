@@ -48,7 +48,7 @@ else
 endif
 
 # calculate dependencies for a list of source files $(2) and output them to $(1)
-mkdepfile = $(SILENT)perl $(TOOLSDIR)/multigcc.pl $(CC) $(PPCFLAGS) $(OTHER_INC) -MG -MM -include config.h -- $(2) | \
+mkdepfile = $(SILENT)perl $(TOOLSDIR)/multigcc.pl $(CC) $(PPCFLAGS) $(OTHER_INC) -MG -MM -include config.h -- $(call convpath, $(2)) | \
 	sed -e "s: lang.h: lang/lang.h:" \
 	-e 's:_asmdefs.o:_asmdefs.h:' \
 	-e "s: max_language_size.h: lang/max_language_size.h:" | \

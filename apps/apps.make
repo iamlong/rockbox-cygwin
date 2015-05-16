@@ -7,7 +7,7 @@
 # $Id$
 #
 
-INCLUDES += -I$(APPSDIR) $(patsubst %,-I$(APPSDIR)/%,$(subst :, ,$(APPEXTRA)))
+INCLUDES += -I$(call convpath, $(APPSDIR)) $(patsubst %,-I$(call convpath, $(APPSDIR)/%),$(subst :, ,$(APPEXTRA)))
 SRC += $(call preprocess, $(APPSDIR)/SOURCES)
 
 # apps/features.txt is a file that (is preprocessed and) lists named features
@@ -18,6 +18,7 @@ SRC += $(call preprocess, $(APPSDIR)/SOURCES)
 # Kludge: depends on config.o which only depends on config-*.h to have config.h
 # changes trigger a genlang re-run
 #
+
 $(BUILDDIR)/apps/features: $(APPSDIR)/features.txt  $(BUILDDIR)/firmware/common/config.o
 	$(SILENT)mkdir -p $(BUILDDIR)/apps
 	$(SILENT)mkdir -p $(BUILDDIR)/lang

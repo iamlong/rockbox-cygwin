@@ -14,6 +14,8 @@ DEFINES = -DROCKBOX -DMEMORYSIZE=$(MEMORYSIZE) $(TARGET) \
 	$(EXTRA_DEFINES) # <-- -DSIMULATOR or not
 INCLUDES = -I$(call convpath, $(BUILDDIR)) -I$(call convpath, $(BUILDDIR)/lang) $(TARGET_INC)
 
+INCLUDES +=-I$(call convpath, $(ROOTDIR)/lib/rbcodec) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/dsp) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/metadata) -I$(call convpath, $(ROOTDIR)/lib/skin_parser)
+
 CFLAGS = $(INCLUDES) $(DEFINES) $(GCCOPTS) 
 
 PPCFLAGS = $(filter-out -g -Dmain=SDL_main,$(CFLAGS)) # cygwin sdl-config fix
@@ -418,7 +420,7 @@ help:
 # when source and object are in different locations (normal):
 $(BUILDDIR)/%.o: $(ROOTDIR)/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(BUILDDIR)/%.o: $(ROOTDIR)/%.S
 	$(SILENT)mkdir -p $(dir $@)
