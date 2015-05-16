@@ -1,0 +1,81 @@
+## Automatically generated. http://www.rockbox.org/
+
+export ROOTDIR=/home/Steve/projects/rockbox/rockbox
+export FIRMDIR=$(ROOTDIR)/firmware
+export APPSDIR=$(ROOTDIR)/apps
+export TOOLSDIR=$(ROOTDIR)/tools
+export DOCSDIR=/home/Steve/projects/rockbox/rockbox/docs
+export MANUALDIR=/home/Steve/projects/rockbox/rockbox/manual
+export DEBUG=
+export MODELNAME=android
+export ARCHOSROM=
+export FLASHFILE=
+export TARGET_ID=74
+export TARGET=-DANDROID
+export ARCH=arch_arm
+export ARCH_VERSION=5
+export CPU=hosted
+export MANUFACTURER=android
+export OBJDIR=/home/Steve/projects/rockbox/build
+export BUILDDIR=/home/Steve/projects/rockbox/build
+export RBCODEC_BLD=/home/Steve/projects/rockbox/build/lib/rbcodec
+export LANGUAGE=english
+export VOICELANGUAGE=
+export MEMORYSIZE=8
+export BUILDDATE:=$(shell date -u +'-DYEAR=%Y -DMONTH=%m -DDAY=%d')
+export MKFIRMWARE=cp 
+export BMP2RB_MONO=/home/Steve/projects/rockbox/rockbox/tools/bmp2rb -f 0
+export BMP2RB_NATIVE=/home/Steve/projects/rockbox/rockbox/tools/bmp2rb -f 4
+export BMP2RB_REMOTEMONO=
+export BMP2RB_REMOTENATIVE=
+export BINARY=librockbox.so
+export APPEXTRA=recorder:gui:radio:hosted/android
+export ENABLEDPLUGINS=yes
+export SOFTWARECODECS=yes
+export EXTRA_DEFINES= -DAPPLICATION
+export HOSTCC=/usr/bin/gcc
+export HOSTAR=/usr/bin/ar
+export CC=/usr/bin/ccache /home/Steve/android-ndk-r9c/toolchains/arm-linux-androideabi-4.8/prebuilt/windows/bin/arm-linux-androideabi-gcc
+export CPP=/home/Steve/android-ndk-r9c/toolchains/arm-linux-androideabi-4.8/prebuilt/windows/bin/arm-linux-androideabi-cpp
+export LD=/home/Steve/android-ndk-r9c/toolchains/arm-linux-androideabi-4.8/prebuilt/windows/bin/arm-linux-androideabi-ld
+export AR=/home/Steve/android-ndk-r9c/toolchains/arm-linux-androideabi-4.8/prebuilt/windows/bin/arm-linux-androideabi-ar
+export AS=/home/Steve/android-ndk-r9c/toolchains/arm-linux-androideabi-4.8/prebuilt/windows/bin/arm-linux-androideabi-as
+export OC=/home/Steve/android-ndk-r9c/toolchains/arm-linux-androideabi-4.8/prebuilt/windows/bin/arm-linux-androideabi-objcopy
+export WINDRES=arm-linux-androideabi-windres
+export DLLTOOL=arm-linux-androideabi-dlltool
+export DLLWRAP=arm-linux-androideabi-dllwrap
+export RANLIB=/home/Steve/android-ndk-r9c/toolchains/arm-linux-androideabi-4.8/prebuilt/windows/bin/arm-linux-androideabi-ranlib
+export PREFIX=
+export PROFILE_OPTS=
+export APP_TYPE=android
+export APPLICATION=yes
+export SIMDIR=$(ROOTDIR)/uisimulator/sdl
+export GCCOPTS=-W -Wall  -O   -Wstrict-prototypes -pipe -std=gnu99 -march=armv5te -mtune=xscale -msoft-float -fomit-frame-pointer                     --sysroot=$(call convpath, /home/Steve/android-ndk-r9c/platforms/android-16/arch-arm)
+export TARGET_INC=-I$(call convpath, $(FIRMDIR)/target/hosted/android/app) -I$(call convpath, $(FIRMDIR)/target/hosted/android) -I$(call convpath, $(FIRMDIR)/target/hosted)
+export LOADADDRESS=
+export SHARED_LDFLAG=-shared
+export SHARED_CFLAGS=
+export LDOPTS= -ldl -llog -Wl,-soname,librockbox.so -shared --sysroot=$(call convpath, /home/Steve/android-ndk-r9c/platforms/android-16/arch-arm)
+export GLOBAL_LDOPTS=-Wl,-z,defs -Wl,-z,noexecstack
+export GCCVER=4.8
+export GCCNUM=408
+export UNAME=CYGWIN_NT-6.1
+export MANUALDEV=android
+export TTS_OPTS=
+export TTS_ENGINE=
+export ENC_OPTS=
+export ENCODER=
+export USE_ELF=
+export RBDIR=/.rockbox
+export ROCKBOX_SHARE_PATH=/data/data/org.rockbox/app_rockbox/rockbox
+export ROCKBOX_BINARY_PATH=/data/data/org.rockbox/lib
+export ROCKBOX_LIBRARY_PATH=/data/data/org.rockbox/app_rockbox
+export SDLCONFIG=
+export LCDORIENTATION=portrait
+export ANDROID_ARCH=armeabi
+export ANDROID_NDK_PATH=/home/Steve/android-ndk-r9c
+export ANDROID_SDK_PATH=/home/Steve/android/adt-bundle-windows-x86_64-20130917/sdk
+
+CONFIGURE_OPTIONS=--lcdwidth=320 --lcdheight=480 --target=$(MODELNAME) --ram=$(MEMORYSIZE) --rbdir=$(RBDIR) --type=N
+
+include $(TOOLSDIR)/root.make

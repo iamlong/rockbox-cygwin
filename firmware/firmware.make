@@ -7,13 +7,14 @@
 # $Id$
 #
 
-INCLUDES += -I$(FIRMDIR) -I$(FIRMDIR)/export -I$(FIRMDIR)/drivers \
-			-I$(FIRMDIR)/include -I$(FIRMDIR)/kernel/include
+INCLUDES += -I$(call convpath, $(FIRMDIR)) -I$(call convpath, $(FIRMDIR)/export) -I$(call convpath, $(FIRMDIR)/drivers) \
+			-I$(call convpath, $(FIRMDIR)/include) -I$(call convpath, $(FIRMDIR)/kernel/include)
 ifndef APP_TYPE
-INCLUDES += -I$(FIRMDIR)/libc/include
+INCLUDES += -I$(call convpath, $(FIRMDIR)/libc/include)
 endif
 
 include $(FIRMDIR)/asm/asm.make
+
 
 FIRMLIB_SRC += $(call preprocess, $(FIRMDIR)/SOURCES)
 FIRMLIB_OBJ := $(call c2obj, $(FIRMLIB_SRC))

@@ -12,10 +12,12 @@ include $(TOOLSDIR)/functions.make
 DEFINES = -DROCKBOX -DMEMORYSIZE=$(MEMORYSIZE) $(TARGET) \
 	-DTARGET_ID=$(TARGET_ID) -DTARGET_NAME=\"$(MODELNAME)\" $(BUILDDATE) \
 	$(EXTRA_DEFINES) # <-- -DSIMULATOR or not
-INCLUDES = -I$(BUILDDIR) -I$(BUILDDIR)/lang $(TARGET_INC)
+INCLUDES = -I$(call convpath, $(BUILDDIR)) -I$(call convpath, $(BUILDDIR)/lang) $(TARGET_INC)
 
 CFLAGS = $(INCLUDES) $(DEFINES) $(GCCOPTS) 
+
 PPCFLAGS = $(filter-out -g -Dmain=SDL_main,$(CFLAGS)) # cygwin sdl-config fix
+
 ASMFLAGS = -D__ASSEMBLER__      # work around gcc 3.4.x bug with -std=gnu99, only meant for .S files
 CORE_LDOPTS = $(GLOBAL_LDOPTS)  # linker ops specifically for core build
 
