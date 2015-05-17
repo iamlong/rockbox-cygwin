@@ -40,6 +40,9 @@ $(FIRMLIB): $(FIRMLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
 	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
 
+#Build sysfont.h here for cygwin
+DUMMY := $(shell $(TOOLSDIR)/convbdf -l $(MAXCHAR) -h -o $(BUILDDIR)/sysfont.h $(SYSFONT))
+
 $(BUILDDIR)/sysfont.h: $(SYSFONT) $(TOOLS) $(BUILDDIR)/firmware/common/config.o
 	$(call PRINTS,CONVBDF $(subst $(ROOTDIR)/,,$<))$(TOOLSDIR)/convbdf -l $(MAXCHAR) -h -o $@ $<
 

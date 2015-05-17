@@ -209,12 +209,14 @@ sub parsetarget {
 
 my $src;
 sub source {
-    parsetarget("src", \$src, @_);
+    parsetarget("src", \$src, @_); 
+	#print $src;
 }
 
 my $dest;
 sub dest {
     parsetarget("dest", \$dest, @_);
+	#print $dest;
 }
 
 my $voice;
@@ -447,9 +449,10 @@ while(<LANG>) {
 
     $line++;
 
-    # get rid of DOS newlines
+	
+	# get rid of DOS newlines
     $_ =~ tr/\r//d;
-
+	
     if($_ =~ /^( *\#|[ \t\n\r]*\z)/) {
         # comment or empty line - output it if it's part of the header
         if ($header and ($update || $sortfile)) {

@@ -14,7 +14,9 @@ DEFINES = -DROCKBOX -DMEMORYSIZE=$(MEMORYSIZE) $(TARGET) \
 	$(EXTRA_DEFINES) # <-- -DSIMULATOR or not
 INCLUDES = -I$(call convpath, $(BUILDDIR)) -I$(call convpath, $(BUILDDIR)/lang) $(TARGET_INC)
 
-INCLUDES +=-I$(call convpath, $(ROOTDIR)/lib/rbcodec) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/dsp) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/metadata) -I$(call convpath, $(ROOTDIR)/lib/skin_parser)
+INCLUDES +=-I$(call convpath, $(ROOTDIR)/lib/rbcodec) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/dsp) \
+		-I$(call convpath, $(ROOTDIR)/lib/rbcodec/metadata) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/codecs) \
+		-I$(call convpath, $(ROOTDIR)/lib/skin_parser)
 
 CFLAGS = $(INCLUDES) $(DEFINES) $(GCCOPTS) 
 

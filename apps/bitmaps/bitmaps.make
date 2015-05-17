@@ -26,7 +26,6 @@ BMP += $(call preprocess, $(BITMAPDIR)/remote_native/SOURCES)
 endif
 
 BMPOBJ = $(BMP:$(ROOTDIR)/%.bmp=$(BUILDDIR)/%.o)
-$(warning $(BMPOBJ))
 BMPHFILES = $(BMPINCDIR)/usblogo.h $(BMPINCDIR)/remote_usblogo.h \
 	$(BMPINCDIR)/default_icons.h $(BMPINCDIR)/remote_default_icons.h \
 	$(BMPINCDIR)/rockboxlogo.h $(BMPINCDIR)/remote_rockboxlogo.h

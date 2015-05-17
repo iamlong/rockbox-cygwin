@@ -19,8 +19,14 @@ CLEANOBJS += $(BUILDDIR)/lang/max_language_size.h $(BUILDDIR)/lang/lang*
 # $(BUILDDIR)/apps/lang must exist before we create dependencies on it,
 # otherwise make will simply ignore those dependencies.
 # Therefore we create it here.
-DUMMY := $(shell mkdir -p $(BUILDDIR)/apps/lang)
-DUMMY := $(shell $(TOOLSDIR)/genlang -p=$(BUILDDIR)/lang -t=$(MODELNAME) $(APPSDIR)/lang/chinese-simp.lang)
+#Below are the modifications special for cygwin
+DUMMY := $(shell mkdir $(BUILDDIR)/apps/lang)
+DUMMY := $(shell $(TOOLSDIR)/genlang -p=$(BUILDDIR)/lang -t=$(MODELNAME) $(APPSDIR)/lang/english-us.lang)
+DUMMY := $(shell cp $(APPSDIR)/lang/english* $(BUILDDIR)/apps/lang)
+DUMMY := $(shell cp $(APPSDIR)/lang/chinese* $(BUILDDIR)/apps/lang)
+DUMMY1 := $(shell ls -ln $(BUILDDIR)/apps/lang | awk '{print $$5-10}' | sort -n | tail -1)
+DUMMY := $(shell echo $(warning "\#define MAX_LANGUAGE_SIZE $(DUMMY1)")"\#define MAX_LANGUAGE_SIZE $(DUMMY1)" | cat > $(BUILDDIR)/lang/max_language_size.h)
+$(warning $(DUMMY))
 
 # Calculate the maximum language size. Currently based on the file size
 # of the largest lng file. Subtract 10 due to HEADER_SIZE and 
