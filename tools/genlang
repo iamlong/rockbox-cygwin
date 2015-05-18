@@ -467,8 +467,8 @@ while(<LANG>) {
     # print "M: $m\n";
 
     push @phrase, $ll;
-
-    # this is an XML-lookalike tag
+	
+	# this is an XML-lookalike tag
     if (/^(<|[^\"<]+<)([^>]*)>/) {
         my $part = $2;
         # print "P: $part\n";
@@ -481,13 +481,14 @@ while(<LANG>) {
 
                 my $idstr = $phrase{'id'};
                 my $idnum;
-
+				
                 if($binary && !$english{$idstr}) {
                     # $idstr doesn't exist for english, skip it\n";
                 }
                 elsif($dest =~ /^none\z/i) {
                     # "none" as dest (without quotes) means that this entire
                     # phrase is to be ignored
+					#print "ignore IDSTR: IDSTR: $idstr\n";
                 }
                 elsif($sortfile) {
                     $allphrases{$idstr}=join('',@phrase);
