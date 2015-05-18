@@ -18,7 +18,12 @@ SRC += $(call preprocess, $(APPSDIR)/SOURCES)
 # Kludge: depends on config.o which only depends on config-*.h to have config.h
 # changes trigger a genlang re-run
 #
-
+DUMMY := $(shell mkdir -p $(BUILDDIR)/apps)
+DUMMY := $(shell mkdir -p $(BUILDDIR)/lang)
+DUMMY := $(shell $(CC) $(PPCFLAGS) \
+                 -E -P -imacros "config.h" -imacros "button.h" -x c $(call convpath, $(APPSDIR)/features.txt) | \
+				grep -v "^\#" | grep -v "^ *$$" > $(BUILDDIR)/apps/features;)
+				
 $(BUILDDIR)/apps/features: $(APPSDIR)/features.txt  $(BUILDDIR)/firmware/common/config.o
 	$(SILENT)mkdir -p $(BUILDDIR)/apps
 	$(SILENT)mkdir -p $(BUILDDIR)/lang

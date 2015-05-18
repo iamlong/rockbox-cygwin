@@ -21,7 +21,9 @@ CLEANOBJS += $(BUILDDIR)/lang/max_language_size.h $(BUILDDIR)/lang/lang*
 # Therefore we create it here.
 #Below are the modifications special for cygwin
 DUMMY := $(shell mkdir -p $(BUILDDIR)/apps/lang)
-DUMMY := $(shell $(TOOLSDIR)/genlang -p=$(BUILDDIR)/lang -t=$(MODELNAME) $(APPSDIR)/lang/chinese-simp.lang)
+DUMMY := $(shell mkdir -p $(BUILDDIR)/lang)
+DUMMY := $(shell for f in `cat $(BUILDDIR)/apps/features`; do feat="$$feat:$$f" ; done; \
+             perl $(TOOLSDIR)/genlang -p=$(BUILDDIR)/lang -t=$$feat $(APPSDIR)/lang/$(LANGUAGE).lang)
 DUMMY := $(shell cp $(APPSDIR)/lang/english* $(BUILDDIR)/apps/lang)
 DUMMY := $(shell cp $(APPSDIR)/lang/chinese* $(BUILDDIR)/apps/lang)
 DUMMY1 := $(shell ls -ln $(BUILDDIR)/apps/lang | awk '{print $$5-10}' | sort -n | tail -1)
