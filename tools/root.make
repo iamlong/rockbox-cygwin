@@ -426,7 +426,7 @@ $(BUILDDIR)/%.o: $(ROOTDIR)/%.c
 
 $(BUILDDIR)/%.o: $(ROOTDIR)/%.S
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) $(ASMFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) $(ASMFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 # generated definitions for use in .S files
 $(BUILDDIR)/%_asmdefs.h: $(ROOTDIR)/%_asmdefs.c

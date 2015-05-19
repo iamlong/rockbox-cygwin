@@ -23,6 +23,7 @@ DUMMY := $(shell mkdir -p $(BUILDDIR)/lang)
 DUMMY := $(shell $(CC) $(PPCFLAGS) \
                  -E -P -imacros "config.h" -imacros "button.h" -x c $(call convpath, $(APPSDIR)/features.txt) | \
 				grep -v "^\#" | grep -v "^ *$$" > $(BUILDDIR)/apps/features;)
+#DUMMY := $(shell cp $(APPSDIR)/core_asmdefs.c $(BUILDDIR)/apps/core_asmdefs.h)
 				
 $(BUILDDIR)/apps/features: $(APPSDIR)/features.txt  $(BUILDDIR)/firmware/common/config.o
 	$(SILENT)mkdir -p $(BUILDDIR)/apps

@@ -33,6 +33,7 @@ BMPHFILES = $(BMPINCDIR)/usblogo.h $(BMPINCDIR)/remote_usblogo.h \
 $(BMPHFILES): $(BMPOBJ)
 DUMMY := $(shell mkdir -p $(BMPINCDIR))
 DUMMY := $(shell $(BMP2RB_NATIVE) -b -h $(BMPINCDIR) $(APPSDIR)/bitmaps/native/rockboxlogo.480x149x16.bmp)
+DUMMY := $(shell $(BMP2RB_MONO) -b -h $(BMPINCDIR) $(APPSDIR)/bitmaps/mono/default_icons.bmp)
 
 # pattern rules to create .c files from .bmp, one for each subdir:
 $(BUILDDIR)/apps/bitmaps/mono/%.c: $(ROOTDIR)/apps/bitmaps/mono/%.bmp $(TOOLSDIR)/bmp2rb
