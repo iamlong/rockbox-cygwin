@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "string-extra.h"
+#include "gcc_extensions.h"
 
 #include "applimits.h"
 #include "dir.h"

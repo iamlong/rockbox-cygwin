@@ -433,7 +433,11 @@ $(BUILDDIR)/%_asmdefs.h: $(ROOTDIR)/%_asmdefs.c
 	$(call PRINTS,ASMDEFS $(@F))
 	$(SILENT)mkdir -p $(dir $@)
 	$(call asmdefs2file,$<,$@)
+#I don't know why it's not called. But I need to call it to generate apps/core_asmdefs.h. Using below code to make it happen:
 
+DUMMY := $(shell mkdir -p $(BUILDDIR)/apps))$(warning I am here)
+DUMMY := $(warning $(call asmdefs2file, $(ROOTDIR)/apps/core_asmdefs.c, $(BUILDDIR)/apps/core_asmdefs.h))$(call asmdefs2file, $(ROOTDIR)/apps/core_asmdefs.c, $(BUILDDIR)/apps/core_asmdefs.h)
+	
 # when source and object are both in BUILDDIR (generated code):
 %.o: %.c
 	$(SILENT)mkdir -p $(dir $@)

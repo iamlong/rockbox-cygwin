@@ -15,7 +15,7 @@
 # The sed line is to prepend the directory to all source files
 convpath = $(shell cygpath -m $(1))
 
-preprocess0 = $(shell $(CC) $(PPCFLAGS) $(2) -E -P -x c -include config.h $(convpath, $(1)) | \
+preprocess0 = $(shell $(CC) $(PPCFLAGS) $(2) -E -P -x c -include config.h $(call convpath, $(1)) | \
 		grep -v '^\#' | grep -v "^ *$$" | \
 		sed -e 's:^..*:$(dir $(1))&:')
 
@@ -23,11 +23,13 @@ preprocess = $(foreach dir, $(shell $(CC) $(PPCFLAGS) $(2) -E -P -x c -include c
 		grep -v '^\#' | grep -v "^ *$$" | \
 		sed -e 's:^..*:$(dir $(1))&:'), $(if $(findstring $(notdir $(dir)), "1"), ,$(if $(findstring $(notdir $(dir)), "5"),,$(dir))))
 		
-preprocess2file = $(SILENT)$(CC) $(PPCFLAGS) $(3) -E -P -x c -include config.h $(1) | \
+preprocess2file = $(SILENT)$(CC) $(PPCFLAGS) $(3) -E -P -x c -include config.h $(call convpath, $(1)) | \
 		grep -v '^\#' | grep -v "^$$" > $(2)
 
-asmdefs2file = $(SILENT)$(CC) $(PPCFLAGS) $(3) -S -x c -o - -include config.h $(1) | \
-	perl -ne 'if(/^_?AD_(\w+):$$/){$$var=$$1}else{/^\W\.(?:word|long)\W(.*)$$/ && $$var && print "\#define $$var $$1\n";$$var=0}' > $(2)
+#asmdefs2file = $(SILENT)$(CC) $(PPCFLAGS) $(3) -S -x c -o - -include config.h $(call convpath, $(1)) | \
+#	perl -ne 'if(/^_?AD_(\w+):$$/){$$var=$$1}else{/^\W\.(?:word|long)\W(.*)$$/ && $$var && print "\#define $$var $$1\n";$$var=0}' > $(2)
+
+asmdefs2file = $(CC) $(PPCFLAGS) $(3) -S -x c -o - -include config.h $(call convpath, $(1)) > $(2)
 
 c2obj = $(addsuffix .o,$(basename $(subst $(ROOTDIR),$(BUILDDIR),$(1))))
 
