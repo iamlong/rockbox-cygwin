@@ -45,7 +45,7 @@ VOICESPEEXLIB_SRC := $(call preprocess, $(RBCODECLIB_DIR)/codecs/libspeex/SOURCE
 VOICESPEEXLIB_OBJ := $(addsuffix .o,$(basename $(subst $(RBCODECLIB_DIR)/codecs/libspeex,$(RBCODEC_BLD)/codecs/libspeex-voice,$(VOICESPEEXLIB_SRC))))
 
 $(VOICESPEEXLIB): $(VOICESPEEXLIB_OBJ)
-	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^)>/dev/null
 
 # pattern rules
 

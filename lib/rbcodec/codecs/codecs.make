@@ -16,14 +16,14 @@ CODECS := $(subst $(RBCODECLIB_DIR),$(RBCODEC_BLD),$(CODECS))
 
 # the codec helper library
 include $(RBCODECLIB_DIR)/codecs/lib/libcodec.make
-OTHER_INC += -I$(RBCODECLIB_DIR)/codecs/lib
+OTHER_INC += -I$(call convpath,$(RBCODECLIB_DIR)/codecs/lib)
 
 # extra libraries
 CODEC_LIBS := $(CODECLIB) $(FIXEDPOINTLIB)
 
 # compile flags for codecs
 CODECFLAGS := $(CFLAGS) $(RBCODEC_CFLAGS) -fstrict-aliasing \
-			 -I$(RBCODECLIB_DIR)/codecs -I$(RBCODECLIB_DIR)/codecs/lib -DCODEC
+			 -I$(call convpath, $(RBCODECLIB_DIR)/codecs) -I$(call convpath,$(RBCODECLIB_DIR)/codecs/lib) -DCODEC
 
 ifdef APP_TYPE
  CODECLDFLAGS = $(SHARED_LDFLAG) -Wl,--gc-sections -Wl,-Map,$(CODECDIR)/$*.map
@@ -189,13 +189,13 @@ $(CODECS): $(CODEC_LIBS) # this must be last in codec dependency list
 $(CODECDIR)/%.o: $(RBCODECLIB_DIR)/codecs/%.c
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) \
-		-I$(dir $<) $(CODECFLAGS) -c $< -o $@
+		-I$(call convpath,$(dir $<)) $(CODECFLAGS) -c $(call convpath,$<) -o $(call convpath,$@)
 
 # pattern rule for compiling codecs
 $(CODECDIR)/%.o: $(RBCODECLIB_DIR)/codecs/%.S
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) \
-		-I$(dir $<) $(CODECFLAGS) $(ASMFLAGS) -c $< -o $@
+		-I$(dir $<) $(CODECFLAGS) $(ASMFLAGS) -c $(call convpath,$<) -o $(call convpath,$@)
 
 $(CODECDIR)/%-pre.map: $(CODEC_CRT0) $(CODECLINK_LDS) $(CODECDIR)/%.o $(CODECS_LIBS)
 	$(call PRINTS,LD $(@F))$(CC) $(CODECFLAGS) -o $(CODECDIR)/$*-pre.elf \
@@ -208,4 +208,4 @@ $(CODECDIR)/%.codec: $(CODECDIR)/%.o
 		$(filter %.o, $^) \
 		$(filter %.a, $+) \
 		-lgcc $(CODECLDFLAGS)
-	$(SILENT)$(call objcopy,$(CODECDIR)/$*.elf,$@)
+	$(SILENT)$(call objcopy,$(call convpath,$(CODECDIR)/$*.elf),$(call convpath,$@))

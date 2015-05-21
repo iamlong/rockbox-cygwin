@@ -117,7 +117,7 @@ classes: $(R_OBJ) $(JAVA_OBJ)
 
 $(BUILDDIR)/$(BINARY): $$(OBJ) $(FIRMLIB) $(VOICESPEEXLIB) $(CORE_LIBS) $(CPUFEAT_BUILD)/cpu-features.o
 	$(call PRINTS,LD $(BINARY))$(CC) -o $(call convpath, $@) $(call convpath, $^) $(LDOPTS) $(GLOBAL_LDOPTS) -Wl,-Map,$(call convpath, $(BUILDDIR)/rockbox.map)
-	$(call PRINTS,OC $(@F))$(call objcopy,$@,$@)
+	$(call PRINTS,OC $(@F))$(call objcopy,$(call convpath,$@),$(call convpath,$@))
 
 $(BINLIB_DIR)/$(BINARY): $(BUILDDIR)/$(BINARY)
 	$(call PRINTS,CP $(BINARY))cp $^ $@
