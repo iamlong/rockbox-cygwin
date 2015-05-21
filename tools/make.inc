@@ -7,11 +7,11 @@ PRINTS=$(SILENT)$(call info,$(1))
 
 $(OBJDIR)/%.o: %.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $<)$(CC) $(CFLAGS) -c $< -o $@
+	$(call PRINTS,CC $<)$(CC) $(CFLAGS) -c $(call convpath,$<) -o $(call convpath,$@)
 
 $(OBJDIR)/%.o: %.S
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $<)$(CC) $(CFLAGS) $(ASMFLAGS) -c $< -o $@
+	$(call PRINTS,CC $<)$(CC) $(CFLAGS) $(ASMFLAGS) -c $(call convpath,$<) -o $(call convpath,$@)
 
 # The echo stuff last in the dep update shell magic is to prevent any compiler
 # errors/warnings to cause an error code to get returned and thus stop the
@@ -39,7 +39,7 @@ $(DEPFILE): $(SOURCES)
 	    fi; \
 	    if test "x" != "$$each"; then \
 	        obj=`echo $$each | sed -e 's/\.[cS]/.o/'`; \
-	        $(CC) -MG -MM -MT "$(OBJDIR)/$$obj" $(CFLAGS) $$each 2>/dev/null; \
+	        $(CC) -MG -MM -MT $(call convpath,"$(OBJDIR)/$$obj") $(CFLAGS) $(call convpath,$$each) 2>/dev/null; \
 	    fi; \
 	    if test -n "$$del"; then \
 	        rm $$del; \

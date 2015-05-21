@@ -23,13 +23,16 @@ CODEC_LIBS := $(CODECLIB) $(FIXEDPOINTLIB)
 
 # compile flags for codecs
 CODECFLAGS := $(CFLAGS) $(RBCODEC_CFLAGS) -fstrict-aliasing \
-			 -I$(call convpath, $(RBCODECLIB_DIR)/codecs) -I$(call convpath,$(RBCODECLIB_DIR)/codecs/lib) -DCODEC
+			 -I$(call convpath, $(RBCODECLIB_DIR)/codecs) -I$(call convpath,$(RBCODECLIB_DIR)/codecs/lib) \
+			 -I$(call convpath,$(RBCODECLIB_DIR)/codecs/libopus) -I$(call convpath,$(ROOTDIR)/lib/tlsf/src) \
+			 -I$(call convpath,$(RBCODECLIB_DIR)/codecs/libopus/celt) -I$(call convpath,$(RBCODECLIB_DIR)/codecs/libopus/silk) \
+			 -DCODEC -DFIXED_POINT -DUSE_SMALL_DIV_TABLE
 
 ifdef APP_TYPE
- CODECLDFLAGS = $(SHARED_LDFLAG) -Wl,--gc-sections -Wl,-Map,$(CODECDIR)/$*.map
+ CODECLDFLAGS = $(SHARED_LDFLAG) -Wl,--gc-sections -Wl,-Map,$(call convpath,$(CODECDIR)/$*.map)
  CODECFLAGS += $(SHARED_CFLAGS) # <-- from Makefile
 else
- CODECLDFLAGS = -T$(CODECLINK_LDS) -Wl,--gc-sections -Wl,-Map,$(CODECDIR)/$*.map
+ CODECLDFLAGS = -T$(CODECLINK_LDS) -Wl,--gc-sections -Wl,-Map,$(call convpath,$(CODECDIR)/$*.map)
  CODECFLAGS += -UDEBUG -DNDEBUG
 endif
 CODECLDFLAGS += $(GLOBAL_LDOPTS)
@@ -204,8 +207,8 @@ $(CODECDIR)/%-pre.map: $(CODEC_CRT0) $(CODECLINK_LDS) $(CODECDIR)/%.o $(CODECS_L
 		-lgcc $(subst .map,-pre.map,$(CODECLDFLAGS))
 
 $(CODECDIR)/%.codec: $(CODECDIR)/%.o
-	$(call PRINTS,LD $(@F))$(CC) $(CODECFLAGS) -o $(CODECDIR)/$*.elf \
-		$(filter %.o, $^) \
-		$(filter %.a, $+) \
+	$(call PRINTS,LD $(@F))$(CC) $(CODECFLAGS) -o $(call convpath,$(CODECDIR)/$*.elf) \
+		$(call convpath,$(filter %.o, $^)) \
+		$(call convpath,$(filter %.a, $+)) \
 		-lgcc $(CODECLDFLAGS)
 	$(SILENT)$(call objcopy,$(call convpath,$(CODECDIR)/$*.elf),$(call convpath,$@))

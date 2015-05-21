@@ -34,4 +34,4 @@ endif
 $(CODECDIR)/lib/%.o: $(RBCODECLIB_DIR)/codecs/lib/%.c
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) \
-		-I$(dir $<) $(CODECLIBFLAGS) -c $< -o $@
+		-I$(dir $<) $(CODECLIBFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
