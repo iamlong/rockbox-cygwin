@@ -22,6 +22,7 @@
 #define _RBENDIAN_H_
 
 #include "config.h"
+#include "gcc_extensions.h"
 
 #ifndef __MINGW32__
 #include <endian.h>

@@ -29,8 +29,8 @@ endif
 $(FIXEDPOINTLIB_OBJ): $(FIXEDPOINTLIB_SRC)
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) \
-		$(FIXEDPOINTLIB_FLAGS) -c $< -o $@
+		$(FIXEDPOINTLIB_FLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(FIXEDPOINTLIB): $(FIXEDPOINTLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null

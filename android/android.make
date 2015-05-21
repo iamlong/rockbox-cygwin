@@ -16,12 +16,12 @@ ANDROID_DIR=$(ROOTDIR)/android
 # The NDK ships cpu-features.c which has a compatible function android_getCpuCount()
 CPUFEAT = $(ANDROID_NDK_PATH)/sources/android/cpufeatures
 CPUFEAT_BUILD = $(BUILDDIR)
-INCLUDES += -I$(CPUFEAT)
+INCLUDES += -I$(call convpath, $(CPUFEAT))
 OTHER_SRC += $(CPUFEAT)/cpu-features.c
 CLEANOBJS += $(CPUFEAT_BUILD)/cpu-features.o
 $(CPUFEAT_BUILD)/cpu-features.o: $(CPUFEAT)/cpu-features.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(CPUFEAT)/,,$<))$(CC) -o $@ -c $^ $(GCCOPTS) -Wno-unused
+	$(call PRINTS,CC $(subst $(CPUFEAT)/,,$<))$(CC) -o $(call convpath, $@) -c $(call convpath, $^) $(GCCOPTS) -Wno-unused
 
 .SECONDEXPANSION: # $$(JAVA_OBJ) is not populated until after this
 .SECONDEXPANSION: # $$(OBJ) is not populated until after this
@@ -116,7 +116,7 @@ classes: $(R_OBJ) $(JAVA_OBJ)
 
 
 $(BUILDDIR)/$(BINARY): $$(OBJ) $(FIRMLIB) $(VOICESPEEXLIB) $(CORE_LIBS) $(CPUFEAT_BUILD)/cpu-features.o
-	$(call PRINTS,LD $(BINARY))$(CC) -o $@ $^ $(LDOPTS) $(GLOBAL_LDOPTS) -Wl,-Map,$(BUILDDIR)/rockbox.map
+	$(call PRINTS,LD $(BINARY))$(CC) -o $(call convpath, $@) $(call convpath, $^) $(LDOPTS) $(GLOBAL_LDOPTS) -Wl,-Map,$(call convpath, $(BUILDDIR)/rockbox.map)
 	$(call PRINTS,OC $(@F))$(call objcopy,$@,$@)
 
 $(BINLIB_DIR)/$(BINARY): $(BUILDDIR)/$(BINARY)

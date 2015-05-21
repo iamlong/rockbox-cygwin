@@ -14,7 +14,7 @@ OTHER_SRC += $(CODECLIB_SRC)
 
 $(CODECLIB): $(CODECLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 CODECLIBFLAGS = $(filter-out -O%,$(CODECFLAGS))
 

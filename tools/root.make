@@ -15,8 +15,9 @@ DEFINES = -DROCKBOX -DMEMORYSIZE=$(MEMORYSIZE) $(TARGET) \
 INCLUDES = -I$(call convpath, $(BUILDDIR)) -I$(call convpath, $(BUILDDIR)/lang) $(TARGET_INC)
 
 INCLUDES +=-I$(call convpath, $(ROOTDIR)/lib/rbcodec) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/dsp) \
-		-I$(call convpath, $(ROOTDIR)/lib/rbcodec/metadata) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/codecs) \
-		-I$(call convpath, $(ROOTDIR)/lib/skin_parser)
+		-I$(call convpath, $(ROOTDIR)/lib/rbcodec/metadata) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/codecs) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/codecs/lib) \
+		-I$(call convpath, $(ROOTDIR)/lib/skin_parser) -I$(call convpath, $(ROOTDIR)/lib/fixedpoint) \
+		-I$(call convpath, $(ROOTDIR)/lib/unwarminder)
 
 CFLAGS = $(INCLUDES) $(DEFINES) $(GCCOPTS) 
 
@@ -419,6 +420,11 @@ help:
 
 ### general compile rules:
 
+#I don't know why it's not called. But I need to call it to generate apps/core_asmdefs.h. Using below code to make it happen:
+
+DUMMY := $(shell mkdir -p $(BUILDDIR)/apps))
+DUMMY := $(shell $(call asmdefs2file, $(ROOTDIR)/apps/core_asmdefs.c, $(BUILDDIR)/apps/core_asmdefs.h))
+	
 # when source and object are in different locations (normal):
 $(BUILDDIR)/%.o: $(ROOTDIR)/%.c
 	$(SILENT)mkdir -p $(dir $@)
@@ -433,19 +439,15 @@ $(BUILDDIR)/%_asmdefs.h: $(ROOTDIR)/%_asmdefs.c
 	$(call PRINTS,ASMDEFS $(@F))
 	$(SILENT)mkdir -p $(dir $@)
 	$(call asmdefs2file,$<,$@)
-#I don't know why it's not called. But I need to call it to generate apps/core_asmdefs.h. Using below code to make it happen:
 
-DUMMY := $(shell mkdir -p $(BUILDDIR)/apps))$(warning I am here)
-DUMMY := $(warning $(call asmdefs2file, $(ROOTDIR)/apps/core_asmdefs.c, $(BUILDDIR)/apps/core_asmdefs.h))$(call asmdefs2file, $(ROOTDIR)/apps/core_asmdefs.c, $(BUILDDIR)/apps/core_asmdefs.h)
-	
 # when source and object are both in BUILDDIR (generated code):
 %.o: %.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 %.o: %.S
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) $(ASMFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) $(ASMFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 Makefile: $(TOOLSDIR)/configure
 ifneq (reconf,$(MAKECMDGOALS))

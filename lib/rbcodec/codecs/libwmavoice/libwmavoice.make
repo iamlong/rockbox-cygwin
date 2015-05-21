@@ -15,7 +15,7 @@ OTHER_SRC += $(WMAVOICELIB_SRC)
 
 $(WMAVOICELIB): $(WMAVOICELIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 WMAVOICEFLAGS = -I$(RBCODECLIB_DIR)/codecs/libwmavoice $(filter-out -O%,$(CODECFLAGS))
 

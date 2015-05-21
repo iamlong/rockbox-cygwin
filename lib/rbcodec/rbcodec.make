@@ -21,7 +21,7 @@ OTHER_SRC += $(RBCODECLIB_SRC)
 CORE_LIBS := $(RBCODECLIB) $(CORE_LIBS)
 
 $(RBCODECLIB): $(RBCODECLIB_OBJ)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 ifdef SOFTWARECODECS
   include $(RBCODECLIB_DIR)/codecs/codecs.make

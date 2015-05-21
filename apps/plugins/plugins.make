@@ -71,7 +71,7 @@ $(ROCKS): $(APPSDIR)/plugin.h $(PLUGINLINK_LDS) $(PLUGIN_LIBS) $(PLUGIN_CRT0)
 
 $(PLUGINLIB): $(PLUGINLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 $(PLUGINLINK_LDS): $(PLUGIN_LDS) $(CONFIGFILE)
 	$(call PRINTS,PP $(@F))
