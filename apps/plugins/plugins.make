@@ -58,10 +58,10 @@ PLUGIN_LIBS := $(PLUGINLIB) $(PLUGINBITMAPLIB) $(SETJMPLIB) $(FIXEDPOINTLIB)
 # include <dir>.make from each subdir (yay!)
 $(foreach dir,$(PLUGINSUBDIRS),$(eval include $(dir)/$(notdir $(dir)).make))
 
-OTHER_INC += -I$(APPSDIR)/plugins -I$(APPSDIR)/plugins/lib
+OTHER_INC += -I$(call convpath, $(APPSDIR)/plugins) -I$(call convpath, $(APPSDIR)/plugins/lib)
 
 # special compile flags for plugins:
-PLUGINFLAGS = -I$(APPSDIR)/plugins -DPLUGIN $(CFLAGS)
+PLUGINFLAGS = -I$(call convpath, $(APPSDIR)/plugins) -I$(call convpath, $(ROOTDIR)/lib/tlsf/src) -DPLUGIN $(CFLAGS)
 
 # single-file plugins depend on their respective .o
 $(ROCKS1): $(BUILDDIR)/%.rock: $(BUILDDIR)/%.o
@@ -83,7 +83,11 @@ $(OVERLAYREF_LDS): $(PLUGIN_LDS)
 	$(shell mkdir -p $(dir $@))
 	$(call preprocess2file,$<,$@,-DOVERLAY_OFFSET=0)
 
+#force create credits.raw
+DUMMY := $(call PRINTS,Create credits.raw)$(shell perl $(APPSDIR)/plugins/credits.pl < $(DOCSDIR)/CREDITS > $(BUILDDIR)/credits.raw)
+
 $(BUILDDIR)/credits.raw credits.raw: $(DOCSDIR)/CREDITS
+	$(warning I am here)
 	$(call PRINTS,Create credits.raw)perl $(APPSDIR)/plugins/credits.pl < $< > $(BUILDDIR)/$(@F)
 
 # special dependencies

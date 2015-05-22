@@ -39,7 +39,7 @@ $(DEPFILE): $(SOURCES)
 	    fi; \
 	    if test "x" != "$$each"; then \
 	        obj=`echo $$each | sed -e 's/\.[cS]/.o/'`; \
-	        $(CC) -MG -MM -MT $(call convpath,"$(OBJDIR)/$$obj") $(CFLAGS) $(call convpath,$$each) 2>/dev/null; \
+	        $(warning $(CC) -MG -MM -MT $(call convpath,"$(OBJDIR)/$$obj") $(CFLAGS) $(call convpath,$$each)) $(CC) -MG -MM -MT $(call convpath,"$(OBJDIR)/$$obj") $(CFLAGS) $(call convpath,$$each) 2>/dev/null; \
 	    fi; \
 	    if test -n "$$del"; then \
 	        rm $$del; \

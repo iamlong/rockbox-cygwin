@@ -28,13 +28,13 @@ $(CPUFEAT_BUILD)/cpu-features.o: $(CPUFEAT)/cpu-features.c
 .PHONY: apk classes clean dex dirs libs jar
 
 # API version
-ANDROID_PLATFORM_VERSION=19
+ANDROID_PLATFORM_VERSION=18
 ANDROID_PLATFORM=$(ANDROID_SDK_PATH)/platforms/android-$(ANDROID_PLATFORM_VERSION)
 
 # android tools
-BUILD_TOOLS_VERSION=$(notdir $(firstword $(wildcard $(ANDROID_SDK_PATH)/build-tools/$(ANDROID_PLATFORM_VERSION).*)))
-AAPT=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/aapt
-DX=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/dx
+BUILD_TOOLS_VERSION=$(notdir $(firstword $(wildcard $(warning $(ANDROID_SDK_PATH)/build-tools/$(ANDROID_PLATFORM_VERSION).*))))
+AAPT=$(ANDROID_SDK_PATH)/build-tools/android-4.3/aapt
+DX=$(ANDROID_SDK_PATH)/build-tools/android-4.3/dx
 ZIPALIGN=$(ANDROID_SDK_PATH)/tools/zipalign
 KEYSTORE=$(HOME)/.android/debug.keystore
 ADB=$(ANDROID_SDK_PATH)/platform-tools/adb
@@ -72,7 +72,7 @@ _DIRS		:= $(BUILDDIR)/___/$(PACKAGE_PATH)
 DIRS		+= $(subst ___,gen,$(_DIRS))
 DIRS		+= $(subst ___,data,$(_DIRS))
 DIRS		+= $(BUILDDIR)/libs/$(ANDROID_ARCH)
-DIRS		+= $(CPUFEAT_BUILD)
+DIRS		+= $(CPUFEAT_BUILD
 DIRS		+= $(CLASSPATH)
 
 RES		:= $(wildcard $(ANDROID_DIR)/res/*/*)
@@ -87,8 +87,8 @@ $(MANIFEST): $(MANIFEST_SRC) $(DIRS)
 
 $(R_JAVA) $(AP_): $(MANIFEST) $(RES) | $(DIRS)
 	$(call PRINTS,AAPT $(subst $(BUILDDIR)/,,$@))$(AAPT) package -f -m \
-		-J $(BUILDDIR)/gen -M $(MANIFEST) -S $(ANDROID_DIR)/res \
-		-I $(ANDROID_PLATFORM)/android.jar -F $(AP_)
+		-J $(call convpath, $(BUILDDIR)/gen) -M $(call convpath, $(MANIFEST)) -S $(call convpath, $(ANDROID_DIR)/res) \
+		-I $(call convpath, $(ANDROID_PLATFORM)/android.jar) -F $(call convpath, $(AP_))
 
 $(CLASSPATH)/$(PACKAGE_PATH)/R.class: $(R_JAVA)
 	$(call PRINTS,JAVAC $(subst $(ROOTDIR)/,,$<))javac -d $(BUILDDIR)/bin \
@@ -151,7 +151,7 @@ endif
 		-keystore "$(KEYSTORE)" -storepass "android" -keypass "android" \
 		-signedjar $(TEMP_APK2) $(TEMP_APK) "androiddebugkey" \
 		-sigalg MD5withRSA -digestalg SHA1
-	$(SILENT)$(ZIPALIGN) -v 4 $(TEMP_APK2) $@ > /dev/null
+	$(SILENT)$(warining $(ZIPALIGN) -v 4 $(TEMP_APK2) $@) > /dev/null
 
 $(DIRS):
 	$(SILENT)mkdir -p $@

@@ -33,7 +33,7 @@ endif
 $(LUA_BUILDDIR)/lua.rock: $(LUA_OBJ) $(TLSFLIB) $(LUA_BUILDDIR)/actions.lua $(LUA_BUILDDIR)/buttons.lua $(LUA_BUILDDIR)/rocklib_aux.o
 
 $(LUA_BUILDDIR)/actions.lua: $(LUA_OBJ) $(LUA_SRCDIR)/action_helper.pl
-	$(call PRINTS,GEN $(@F))$(CC) $(PLUGINFLAGS) $(INCLUDES) -E $(APPSDIR)/plugins/lib/pluginlib_actions.h | $(LUA_SRCDIR)/action_helper.pl > $(LUA_BUILDDIR)/actions.lua
+	$(call PRINTS,GEN $(@F))$(CC) $(PLUGINFLAGS) $(INCLUDES) -E $(call convpath, $(APPSDIR)/plugins/lib/pluginlib_actions.h) | $(LUA_SRCDIR)/action_helper.pl > $(LUA_BUILDDIR)/actions.lua
 
 $(LUA_BUILDDIR)/buttons.lua: $(LUA_OBJ) $(LUA_SRCDIR)/button_helper.pl
 	$(SILENT)$(CC) $(INCLUDES) -dM -E -include button-target.h - < /dev/null | $(LUA_SRCDIR)/button_helper.pl | $(HOSTCC) -fno-builtin $(INCLUDES) -x c -o $(LUA_BUILDDIR)/button_helper -
@@ -43,7 +43,7 @@ $(LUA_BUILDDIR)/rocklib_aux.c: $(APPSDIR)/plugin.h $(LUA_OBJ) $(LUA_SRCDIR)/rock
 	$(call PRINTS,GEN $(@F))$(CC) $(PLUGINFLAGS) $(INCLUDES) -E -include plugin.h - < /dev/null | $(LUA_SRCDIR)/rocklib_aux.pl $(LUA_SRCDIR) > $(LUA_BUILDDIR)/rocklib_aux.c
 
 $(LUA_BUILDDIR)/rocklib_aux.o: $(LUA_BUILDDIR)/rocklib_aux.c
-	$(call PRINTS,CC $(<F))$(CC) $(INCLUDES) $(PLUGINFLAGS) -I $(LUA_SRCDIR) -c $< -o $@
+	$(call PRINTS,CC $(<F))$(CC) $(INCLUDES) $(PLUGINFLAGS) -I$(call convpath, $(LUA_SRCDIR)) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(LUA_BUILDDIR)/lua.refmap: $(LUA_OBJ) $(TLSFLIB)
 
@@ -52,8 +52,8 @@ $(LUA_OUTLDS): $(PLUGIN_LDS) $(LUA_BUILDDIR)/lua.refmap
 		$(TOOLSDIR)/ovl_offset.pl $(LUA_BUILDDIR)/lua.refmap))
 
 $(LUA_BUILDDIR)/lua.ovl: $(LUA_OBJ) $(TLSFLIB) $(LUA_OUTLDS)
-	$(SILENT)$(CC) $(PLUGINFLAGS) -o $(basename $@).elf \
-		$(filter %.o, $^) \
-		$(filter %.a, $+) \
+	$(SILENT)$(CC) $(PLUGINFLAGS) -o $(call convpath, $(basename $@).elf) \
+		$(call convpath, $(filter %.o, $^)) \
+		$(call convpath, $(filter %.a, $+)) \
 		-lgcc $(LUA_OVLFLAGS)
-	$(call PRINTS,LD $(@F))$(call objcopy,$(basename $@).elf,$@)
+	$(call PRINTS,LD $(@F))$(call objcopy,$(call convpath, $(basename $@).elf),$(call convpath, $@))
