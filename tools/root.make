@@ -321,7 +321,7 @@ $(BUILDDIR)/rockbox.zip:
 else
 $(BUILDDIR)/rockbox.zip: build
 endif
-	$(SILENT)$(TOOLSDIR)/buildzip.pl $(VERBOSEOPT) --app=$(APPLICATION) -m \"$(MODELNAME)\" -i \"$(TARGET_ID)\"  -r "$(ROOTDIR)" --rbdir="$(RBDIR)" $(TARGET) $(BINARY)
+	$(SILENT) $(TOOLSDIR)/buildzip.pl $(VERBOSEOPT) --app=$(APPLICATION) -m \"$(MODELNAME)\" -i \"$(TARGET_ID)\"  -r "$(ROOTDIR)" --rbdir="$(RBDIR)" $(TARGET) $(BINARY)
 
 mapzip:
 	$(SILENT)find . -name "*.map" | xargs zip rockbox-maps.zip
