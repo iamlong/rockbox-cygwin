@@ -35,7 +35,7 @@ ANDROID_PLATFORM=$(ANDROID_SDK_PATH)/platforms/android-$(ANDROID_PLATFORM_VERSIO
 BUILD_TOOLS_VERSION=$(notdir $(firstword $(wildcard $(ANDROID_SDK_PATH)/build-tools/$(ANDROID_PLATFORM_VERSION).*)))
 AAPT=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/aapt
 DX=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/dx.bat
-ZIPALIGN=$(ANDROID_SDK_PATH)/tools/zipalign
+ZIPALIGN=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/zipalign
 KEYSTORE=$(HOME)/.android/debug.keystore
 ADB=$(ANDROID_SDK_PATH)/platform-tools/adb
 BUILDAPK=$(ANDROID_DIR)/buildapk.sh
@@ -99,9 +99,7 @@ $(CLASSPATH)/$(PACKAGE_PATH)/%.class: $(ANDROID_DIR)/src/$(PACKAGE_PATH)/%.java 
 		$(JAVAC_OPTS) -sourcepath $(ANDROID_DIR)/src $<
 
 $(JAR): $(JAVA_SRC) $(R_JAVA)
-	$(call PRINTS,JAVAC $(subst $(ROOTDIR)/,,$?))$(warning javac -d $(call convpath, $(CLASSPATH)) \
-		$(JAVAC_OPTS) -sourcepath "$(call convpath, $(ANDROID_DIR)/src);$(call convpath, $(ANDROID_DIR)/gen)" $(call convpath, $?)) \
-		javac -d $(call convpath, $(CLASSPATH)) \
+	$(call PRINTS,JAVAC $(subst $(ROOTDIR)/,,$?))javac -d $(call convpath, $(CLASSPATH)) \
 		$(JAVAC_OPTS) -sourcepath "$(call convpath, $(ANDROID_DIR)/src);$(call convpath, $(ANDROID_DIR)/gen)" $(call convpath, $?)
 	$(call PRINTS,JAR $(subst $(BUILDDIR)/,,$@))jar cf $(call convpath, $(JAR)) -C $(call convpath, $(CLASSPATH)) org
 
@@ -133,12 +131,12 @@ $(BINLIB_DIR)/lib%.so: $(RBCODEC_BLD)/codecs/%.codec
 libs: $(DIRS) $(LIBS)
 
 $(TEMP_APK): $(AP_) $(LIBS) $(DEX) | $(DIRS)
-	$(call PRINTS,APK $(subst $(BUILDDIR)/,,$@))$(BUILDAPK) $(BUILDDIR) $(notdir $@) $(BUILD_TOOLS_VERSION)
+	$(call PRINTS,APK $(subst $(BUILDDIR)/,,$@))$(BUILDAPK) $(BUILDDIR) $(notdir $@) $(BUILD_TOOLS_VERSION) 
 
 $(KEYSTORE):
 	$(SILENT)mkdir -p $(HOME)/.android
 	$(call PRINTS,KEYTOOL debug.keystore)keytool -genkey \
-		-alias androiddebugkey -keystore $@ \
+		-alias androiddebugkey -keystore $(call convpath,$@) \
 		-storepass android -keypass android -validity 365 \
 		-sigalg MD5withRSA -keyalg RSA -keysize 1024 \
 		-dname "CN=Android Debug,O=Android,C=US"
@@ -150,10 +148,10 @@ $(APK): $(TEMP_APK) $(BUILDDIR)/rockbox.zip $(KEYSTORE)
 endif
 	$(SILENT)rm -f $@
 	$(call PRINTS,SIGN $(subst $(BUILDDIR)/,,$@))jarsigner \
-		-keystore "$(KEYSTORE)" -storepass "android" -keypass "android" \
-		-signedjar $(TEMP_APK2) $(TEMP_APK) "androiddebugkey" \
+		-keystore "$(call convpath,$(KEYSTORE))" -storepass "android" -keypass "android" \
+		-signedjar $(call convpath,$(TEMP_APK2)) $(call convpath,$(TEMP_APK)) "androiddebugkey" \
 		-sigalg MD5withRSA -digestalg SHA1
-	$(SILENT)$(ZIPALIGN) -v 4 $(TEMP_APK2) $@ > /dev/null
+	$(SILENT)$(ZIPALIGN) -v 4 $(call convpath, $(TEMP_APK2)) $(call convpath,$@) > /dev/null
 
 $(DIRS):
 	$(SILENT)mkdir -p $@

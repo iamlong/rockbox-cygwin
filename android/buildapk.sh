@@ -14,6 +14,6 @@ cd $BUILDDIR/bin
 ln -nfs $BUILDDIR/libs lib
 cp resources.ap_ $APK
 $ANDROID_SDK_PATH/build-tools/$SDKV/aapt add $APK classes.dex > /dev/null
-$ANDROID_SDK_PATH/build-tools/$SDKV/aapt add $APK lib/*/* > /dev/null
+$ANDROID_SDK_PATH/build-tools/$SDKV/aapt add $APK `cygpath -m lib/*/*` > /dev/null
 
 exit 0

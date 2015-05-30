@@ -42,7 +42,6 @@ $(BUILDDIR)/lang/max_language_size.h: $(LANGOBJ) $(BUILDDIR)/apps/lang/voicestri
 $(BUILDDIR)/lang/lang_core.o: $(APPSDIR)/lang/$(LANGUAGE).lang $(BUILDDIR)/apps/features
 	$(SILENT)for f in `cat $(BUILDDIR)/apps/features`; do feat="$$feat:$$f" ; done; \
 		perl -s $(TOOLSDIR)/genlang -p=$(BUILDDIR)/lang -t=$(MODELNAME)$$feat $<
-	$(warning B)
 	$(call PRINTS,CC lang_core.c)$(CC) $(CFLAGS) -c $(call convpath, $(BUILDDIR)/lang/lang_core.c) -o $(call convpath, $@)
 
 $(BUILDDIR)/lang/lang.h: $(BUILDDIR)/lang/lang_core.o
