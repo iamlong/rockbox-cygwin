@@ -13,7 +13,11 @@
 # to make this do right when used on Mac OS X.
 #
 # The sed line is to prepend the directory to all source files
+ifeq ($(findstring CYGWIN, $(UNAME)), CYGWIN)
 convpath = $(shell cygpath -m $(1))
+else
+convpath = $(1)
+endif
 
 preprocess0 = $(shell $(CC) $(PPCFLAGS) $(2) -E -P -x c -include config.h $(call convpath, $(1)) | \
 		grep -v '^\#' | grep -v "^ *$$" | \
