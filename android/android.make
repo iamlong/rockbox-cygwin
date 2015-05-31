@@ -28,7 +28,7 @@ $(CPUFEAT_BUILD)/cpu-features.o: $(CPUFEAT)/cpu-features.c
 .PHONY: apk classes clean dex dirs libs jar
 
 # API version
-ANDROID_PLATFORM_VERSION=19
+ANDROID_PLATFORM_VERSION=6
 ANDROID_PLATFORM=$(ANDROID_SDK_PATH)/platforms/android-$(ANDROID_PLATFORM_VERSION)
 
 # android tools
@@ -147,11 +147,14 @@ else
 $(APK): $(TEMP_APK) $(BUILDDIR)/rockbox.zip $(KEYSTORE)
 endif
 	$(SILENT)rm -f $@
-	$(call PRINTS,SIGN $(subst $(BUILDDIR)/,,$@))jarsigner \
+	$(call PRINTS,SIGN $(subst $(BUILDDIR)/,,$@))$(warning jarsigner \
+		-keystore "$(call convpath,$(KEYSTORE))" -storepass "android" -keypass "android" \
+		-signedjar $(call convpath,$(TEMP_APK2)) $(call convpath,$(TEMP_APK)) "androiddebugkey" \
+		-sigalg MD5withRSA -digestalg SHA1)	jarsigner \
 		-keystore "$(call convpath,$(KEYSTORE))" -storepass "android" -keypass "android" \
 		-signedjar $(call convpath,$(TEMP_APK2)) $(call convpath,$(TEMP_APK)) "androiddebugkey" \
 		-sigalg MD5withRSA -digestalg SHA1
-	$(SILENT)$(ZIPALIGN) -v 4 $(call convpath, $(TEMP_APK2)) $(call convpath,$@) > /dev/null
+	$(SILENT)$(waring $(ZIPALIGN) -v 4 $(call convpath, $(TEMP_APK2)) $(call convpath,$@))$(ZIPALIGN) -v 4 $(call convpath, $(TEMP_APK2)) $(call convpath,$@) > /dev/null
 
 $(DIRS):
 	$(SILENT)mkdir -p $@
