@@ -366,7 +366,7 @@ simcc () {
  fi
 
 
- GCCOPTS="$GCCOPTS -I\$(SIMDIR)"
+ GCCOPTS="$GCCOPTS -I\$(shell cygpath -m \$(SIMDIR))"
  # x86_64 supports MMX by default
 
   if [ "$endian" = "" ]; then
@@ -542,7 +542,7 @@ maemocc () {
  prefixtools ""
 
  GCCOPTS=`echo $CCOPTS | sed -e s/-ffreestanding// -e s/-nostdlib// -e s/-Wundef//`
- GCCOPTS="$GCCOPTS -fno-builtin -g -I\$(SIMDIR)"
+ GCCOPTS="$GCCOPTS -fno-builtin -g -I\$(shell cygpath -m \$(SIMDIR))"
  GCCOPTIMIZE=''
  LDOPTS="-lm -ldl $LDOPTS"
  GLOBAL_LDOPTS="$GLOBAL_LDOPTS -Wl,-z,defs"
@@ -637,7 +637,7 @@ pandoracc () {
  PKG_CONFIG="pkg-config"
 
  GCCOPTS=`echo $CCOPTS | sed -e s/-ffreestanding// -e s/-nostdlib// -e s/-Wundef//`
- GCCOPTS="$GCCOPTS -fno-builtin -g -I\$(SIMDIR)"
+ GCCOPTS="$GCCOPTS -fno-builtin -g -I\$(shell cygpath -m \$(SIMDIR))"
  GCCOPTIMIZE=''
  LDOPTS="-lm -ldl $LDOPTS"
  GLOBAL_LDOPTS="$GLOBAL_LDOPTS -Wl,-z,defs"
@@ -713,7 +713,7 @@ androidcc () {
             # threads work fine so far
             thread_support="ASSEMBLER_THREADS"
             GCCOPTS="$GCCOPTS -march=armv5te -mtune=xscale -msoft-float -fomit-frame-pointer \
-                    --sysroot=\$(call convpath,  $ANDROID_NDK_PATH/platforms/android-16/arch-arm)"
+                    --sysroot=`cygpath -m $ANDROID_NDK_PATH/platforms/android-16/arch-arm`"
             LDOPTS="$LDOPTS --sysroot=\$(call convpath,  $ANDROID_NDK_PATH/platforms/android-16/arch-arm)"
             ;;
         mips)
@@ -3464,7 +3464,8 @@ fi
     libdir="/data/data/org.rockbox/app_rockbox"
     memory=16+`expr $ARG_LCDHEIGHT / 100`
     uname=`uname`
-    androidcc armeabi
+    UNAME=uname
+	androidcc armeabi
     tool="cp "
     boottool="cp "
     bmp2rb_mono="$rootdir/tools/bmp2rb -f 0"
@@ -4175,8 +4176,12 @@ else
 
  num1=`echo $gccver | cut -d . -f1`
  num2=`echo $gccver | cut -d . -f2`
- gccnum=`(expr $num1 "*" 100 + $num2) 2>/dev/null`
+ num1=`expr $num1 + 0`
+ num2=`expr $num2 + 0`
+ gccnum=`expr $num1 "*" 100 + $num2`
 
+ echo $gccnum
+ 
  # This makes:
  # 3.3.X  => 303
  # 3.4.X  => 304
@@ -4244,6 +4249,7 @@ if test "$CC" = "m68k-elf-gcc"; then
   GCCOPTS=`echo $GCCOPTS | sed 's/ -O / -Os /'`
 fi
 
+
 if [ ${UNAME%-*} = "CYGWIN" ]; then
 	if [ "$ARG_CCACHE" = "1" ]; then
 	  echo "Enable ccache for building"
@@ -4270,7 +4276,7 @@ DLLTOOL=`findtool ${DLLTOOL} --lit`
 DLLWRAP=`findtool ${DLLWRAP} --lit`
 RANLIB=`findtool ${RANLIB} --lit`
 
-
+echo $GCCOPTS
 if [ -z "$arch" ]; then
     cpp_defines=$(echo "" | $CPP $GCCOPTS -dD)
     if [ -n "$(echo $cpp_defines | grep -w __sh__)" ]; then
@@ -4306,6 +4312,7 @@ else
         echo "Manually selected arch: $arch"
     fi
 fi
+
 
 arch="arch_$arch"
 if [ -n "$arch_version" ]; then
@@ -4457,6 +4464,7 @@ if test "$apps" = "apps"; then
   buildlangs="langs"
 fi
 
+
 #### Fix the cmdline ###
 if [ -n "$ARG_PREFIX" ]; then
   cmdline="$cmdline --prefix=\$(PREFIX)"
@@ -4562,6 +4570,7 @@ CONFIGURE_OPTIONS=${cmdline}
 
 include \$(TOOLSDIR)/root.make
 EOF
+echo here
 
 echo "Created Makefile"
 

@@ -157,9 +157,7 @@ $(KEYSTORE):
 		-dname "CN=szhang,O=szhang-PC,C=CN" 
 		
 $(APK): $(TEMP_APK) $(BUILDDIR)/rockbox.zip $(KEYSTORE)
-endif
 	$(SILENT)rm -f $@
-
 	$(call PRINTS,SIGN $(subst $(BUILDDIR)/,,$@))jarsigner \
 		-keystore "$(call convpath,$(KEYSTORE))" -storepass "android" -keypass "android" \
 		-signedjar $(call convpath,$(TEMP_APK2)) $(call convpath,$(TEMP_APK)) "androiddebugkey" \
