@@ -14,7 +14,7 @@ OTHER_SRC += $(CODECLIB_SRC)
 
 $(CODECLIB): $(CODECLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 CODECLIBFLAGS = $(filter-out -O%,$(CODECFLAGS))
 
@@ -34,4 +34,4 @@ endif
 $(CODECDIR)/lib/%.o: $(RBCODECLIB_DIR)/codecs/lib/%.c
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) \
-		-I$(dir $<) $(CODECLIBFLAGS) -c $< -o $@
+		-I$(dir $<) $(CODECLIBFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)

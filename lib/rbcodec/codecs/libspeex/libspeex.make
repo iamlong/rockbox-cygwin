@@ -37,7 +37,7 @@ OTHER_SRC += $(SPEEXLIB_SRC)
 
 $(SPEEXLIB): $(SPEEXLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 # libspeex-voice
 VOICESPEEXLIB := $(CODECDIR)/libspeex-voice.a
@@ -45,22 +45,22 @@ VOICESPEEXLIB_SRC := $(call preprocess, $(RBCODECLIB_DIR)/codecs/libspeex/SOURCE
 VOICESPEEXLIB_OBJ := $(addsuffix .o,$(basename $(subst $(RBCODECLIB_DIR)/codecs/libspeex,$(RBCODEC_BLD)/codecs/libspeex-voice,$(VOICESPEEXLIB_SRC))))
 
 $(VOICESPEEXLIB): $(VOICESPEEXLIB_OBJ)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^)>/dev/null
 
 # pattern rules
 
 $(CODECDIR)/libspeex-voice/%.o : $(RBCODECLIB_DIR)/codecs/libspeex/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(VOICESPEEXFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(VOICESPEEXFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(CODECDIR)/libspeex-voice/%.o : $(RBCODECLIB_DIR)/codecs/libspeex/%.S
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(VOICESPEEXFLAGS) $(ASMFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(VOICESPEEXFLAGS) $(ASMFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(CODECDIR)/libspeex/%.o: $(RBCODECLIB_DIR)/codecs/libspeex/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(SPEEXFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(SPEEXFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(CODECDIR)/libspeex/%.o: $(RBCODECLIB_DIR)/codecs/libspeex/%.S
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(SPEEXFLAGS) $(ASMFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(SPEEXFLAGS) $(ASMFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)

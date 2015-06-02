@@ -58,10 +58,10 @@ PLUGIN_LIBS := $(PLUGINLIB) $(PLUGINBITMAPLIB) $(SETJMPLIB) $(FIXEDPOINTLIB)
 # include <dir>.make from each subdir (yay!)
 $(foreach dir,$(PLUGINSUBDIRS),$(eval include $(dir)/$(notdir $(dir)).make))
 
-OTHER_INC += -I$(APPSDIR)/plugins -I$(APPSDIR)/plugins/lib
+OTHER_INC += -I$(call convpath, $(APPSDIR)/plugins) -I$(call convpath, $(APPSDIR)/plugins/lib)
 
 # special compile flags for plugins:
-PLUGINFLAGS = -I$(APPSDIR)/plugins -DPLUGIN $(CFLAGS)
+PLUGINFLAGS = -I$(call convpath, $(APPSDIR)/plugins) -I$(call convpath, $(ROOTDIR)/lib/tlsf/src) -DPLUGIN $(CFLAGS)
 
 # single-file plugins depend on their respective .o
 $(ROCKS1): $(BUILDDIR)/%.rock: $(BUILDDIR)/%.o
@@ -71,7 +71,7 @@ $(ROCKS): $(APPSDIR)/plugin.h $(PLUGINLINK_LDS) $(PLUGIN_LIBS) $(PLUGIN_CRT0)
 
 $(PLUGINLIB): $(PLUGINLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 $(PLUGINLINK_LDS): $(PLUGIN_LDS) $(CONFIGFILE)
 	$(call PRINTS,PP $(@F))
@@ -83,7 +83,11 @@ $(OVERLAYREF_LDS): $(PLUGIN_LDS)
 	$(shell mkdir -p $(dir $@))
 	$(call preprocess2file,$<,$@,-DOVERLAY_OFFSET=0)
 
+#force create credits.raw
+DUMMY := $(call PRINTS,Create credits.raw)$(shell perl $(APPSDIR)/plugins/credits.pl < $(DOCSDIR)/CREDITS > $(BUILDDIR)/credits.raw)
+
 $(BUILDDIR)/credits.raw credits.raw: $(DOCSDIR)/CREDITS
+	$(warning I am here)
 	$(call PRINTS,Create credits.raw)perl $(APPSDIR)/plugins/credits.pl < $< > $(BUILDDIR)/$(@F)
 
 # special dependencies
@@ -99,34 +103,34 @@ endif
 # special pattern rule for compiling plugin lib (with function and data sections)
 $(BUILDDIR)/apps/plugins/lib/%.o: $(ROOTDIR)/apps/plugins/lib/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(dir $<) $(PLUGINLIBFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(call convpath, $(dir $<)) $(PLUGINLIBFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 # special pattern rule for compiling plugins with extra flags
 $(BUILDDIR)/apps/plugins/%.o: $(ROOTDIR)/apps/plugins/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(dir $<) $(PLUGINFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(call convpath, $(dir $<)) $(PLUGINFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 ifdef APP_TYPE
- PLUGINLDFLAGS = $(SHARED_LDFLAG) -Wl,-Map,$*.map
+ PLUGINLDFLAGS = $(SHARED_LDFLAG) -Wl,-Map,$(call convpath, $*.map)
  PLUGINFLAGS += $(SHARED_CFLAGS) # <-- from Makefile
 else
- PLUGINLDFLAGS = -T$(PLUGINLINK_LDS) -Wl,--gc-sections -Wl,-Map,$*.map
- OVERLAYLDFLAGS = -T$(OVERLAYREF_LDS) -Wl,--gc-sections -Wl,-Map,$*.refmap
+ PLUGINLDFLAGS = -T$(PLUGINLINK_LDS) -Wl,--gc-sections -Wl,-Map,$(call convpath, $*.map)
+ OVERLAYLDFLAGS = -T$(OVERLAYREF_LDS) -Wl,--gc-sections -Wl,-Map,$(call convpath, $*.refmap)
 endif
 PLUGINLDFLAGS += $(GLOBAL_LDOPTS)
 
 $(BUILDDIR)/%.rock:
-	$(call PRINTS,LD $(@F))$(CC) $(PLUGINFLAGS) -o $(BUILDDIR)/$*.elf \
-		$(filter %.o, $^) \
-		$(filter %.a, $+) \
+	$(call PRINTS,LD $(@F))$(CC) $(PLUGINFLAGS) -o $(call convpath, $(BUILDDIR)/$*.elf) \
+		$(call convpath, $(filter %.o, $^)) \
+		$(call convpath, $(filter %.a, $+)) \
 		-lgcc $(PLUGINLDFLAGS)
-	$(SILENT)$(call objcopy,$(BUILDDIR)/$*.elf,$@)
+	$(SILENT)$(call objcopy,$(call convpath, $(BUILDDIR)/$*.elf),$(call convpath, $@))
 
 $(BUILDDIR)/apps/plugins/%.lua: $(ROOTDIR)/apps/plugins/%.lua
 	$(call PRINTS,CP $(subst $(ROOTDIR)/,,$<))cp $< $(BUILDDIR)/apps/plugins/
 
 $(BUILDDIR)/%.refmap: $(APPSDIR)/plugin.h $(OVERLAYREF_LDS) $(PLUGIN_LIBS) $(PLUGIN_CRT0)
 	$(call PRINTS,LD $(@F))$(CC) $(PLUGINFLAGS) -o /dev/null \
-		$(filter %.o, $^) \
-		$(filter %.a, $+) \
+		$(call convpath, $(filter %.o, $^)) \
+		$(call convpath, $(filter %.a, $+)) \
 		-lgcc $(OVERLAYLDFLAGS)

@@ -20,11 +20,11 @@ DEMACLIB_OBJ_PRE := $(subst udiv32_arm.o,udiv32_arm-pre.o,$(DEMACLIB_OBJ))
 
 $(DEMACLIB_PRE): $(DEMACLIB_OBJ_PRE)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 $(DEMACLIB): $(DEMACLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 $(CODECDIR)/ape_free_iram.h: $(CODECDIR)/ape-pre.map
 	$(call PRINTS,GEN $(@F))perl -an \

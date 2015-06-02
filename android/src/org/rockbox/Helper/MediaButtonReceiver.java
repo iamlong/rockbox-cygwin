@@ -218,7 +218,7 @@ public class MediaButtonReceiver
     }
 
     private static class NewApi 
-                    implements IMultiMediaReceiver, AudioManager.OnAudioFocusChangeListener
+                    implements IMultiMediaReceiver
     {
         private AudioManager audio_manager;
         private ComponentName receiver_name;
@@ -233,8 +233,6 @@ public class MediaButtonReceiver
         public void register()
         {
             try {
-                audio_manager.registerMediaButtonEventReceiver(receiver_name);
-                audio_manager.requestAudioFocus(this, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
                 running = true;
             } catch (Exception e) {
                 // Nothing
@@ -246,8 +244,6 @@ public class MediaButtonReceiver
         {
             try
             {
-                audio_manager.unregisterMediaButtonEventReceiver(receiver_name);
-                audio_manager.abandonAudioFocus(this);
                 running = false;
             } catch (Exception e) {
                 // Nothing
@@ -261,8 +257,6 @@ public class MediaButtonReceiver
                                          ": "+ focusChange);
             if (running)
             {   /* Play nice and stop for the the other app */
-                if (focusChange == AudioManager.AUDIOFOCUS_LOSS)
-                    RockboxFramebuffer.buttonHandler(KeyEvent.KEYCODE_MEDIA_STOP, false);
             }
         }
         

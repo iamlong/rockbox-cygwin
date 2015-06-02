@@ -19,4 +19,4 @@ INCLUDES += -I$(UNWARMLIB_DIR)
 
 $(UNWARMLIB): $(UNWARMLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null

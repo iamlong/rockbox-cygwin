@@ -25,9 +25,9 @@ endif
 # special rules for tlsf
 $(BUILDDIR)/lib/tlsf/src/%.o: $(TLSFLIB_DIR)/src/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -c $< -o $@ \
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -c $(call convpath, $<) -o $(call convpath, $@) \
 	-I$(TLSFLIB_DIR)/src $(TLSFLIBFLAGS)
 
 $(TLSFLIB): $(TLSFLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null

@@ -38,23 +38,23 @@ $(PBMPHFILES): $(PLUGIN_BITMAPS)
 
 $(PLUGINBITMAPLIB): $(PLUGIN_BITMAPS)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $+ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $+) >/dev/null
 
 # pattern rules to create .c files from .bmp, one for each subdir:
 $(BUILDDIR)/apps/plugins/bitmaps/mono/%.c: $(ROOTDIR)/apps/plugins/bitmaps/mono/%.bmp $(TOOLSDIR)/bmp2rb
 	$(SILENT)mkdir -p $(dir $@) $(PBMPINCDIR)
-	$(call PRINTS,BMP2RB $(<F))$(BMP2RB_MONO) -b -h $(PBMPINCDIR) $< > $@
+	$(call PRINTS,BMP2RB $(<F))$(BMP2RB_MONO) -b -h $(call convpath,$(PBMPINCDIR)) $(call convpath,$<) > $(call convpath,$@)
 
 $(BUILDDIR)/apps/plugins/bitmaps/native/%.c: $(ROOTDIR)/apps/plugins/bitmaps/native/%.bmp $(TOOLSDIR)/bmp2rb
 	$(SILENT)mkdir -p $(dir $@) $(PBMPINCDIR)
-	$(call PRINTS,BMP2RB $(<F))$(BMP2RB_NATIVE) -b -h $(PBMPINCDIR) $< > $@
+	$(call PRINTS,BMP2RB $(<F))$(BMP2RB_NATIVE) -b -h $(call convpath,$(PBMPINCDIR)) $(call convpath,$<) > $(call convpath,$@)
 
 $(BUILDDIR)/apps/plugins/bitmaps/remote_mono/%.c: $(ROOTDIR)/apps/plugins/bitmaps/remote_mono/%.bmp $(TOOLSDIR)/bmp2rb
 	$(SILENT)mkdir -p $(dir $@) $(PBMPINCDIR)
-	$(call PRINTS,BMP2RB $(<F))$(BMP2RB_REMOTEMONO) -b -h $(PBMPINCDIR) $< > $@
+	$(call PRINTS,BMP2RB $(<F))$(BMP2RB_REMOTEMONO) -b -h $(call convpath,$(PBMPINCDIR)) $(call convpath,$<) > $(call convpath,$@)
 
 $(BUILDDIR)/apps/plugins/bitmaps/remote_native/%.c: $(ROOTDIR)/apps/plugins/bitmaps/remote_native/%.bmp $(TOOLSDIR)/bmp2rb
 	$(SILENT)mkdir -p $(dir $@) $(PBMPINCDIR)
-	$(call PRINTS,BMP2RB $(<F))$(BMP2RB_REMOTENATIVE) -b -h $(PBMPINCDIR) $< > $@
+	$(call PRINTS,BMP2RB $(<F))$(BMP2RB_REMOTENATIVE) -b -h $(call convpath,$(PBMPINCDIR)) $(call convpath,$<) > $(call convpath,$@)
 
 endif

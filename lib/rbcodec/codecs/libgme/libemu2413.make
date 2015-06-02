@@ -7,4 +7,4 @@ OTHER_SRC += $(EMU2413LIB_SRC)
 
 $(EMU2413LIB): $(EMU2413LIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null

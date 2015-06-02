@@ -15,4 +15,4 @@ OTHER_SRC += $(M4ALIB_SRC)
 
 $(M4ALIB): $(M4ALIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null

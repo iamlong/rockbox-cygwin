@@ -12,10 +12,17 @@ include $(TOOLSDIR)/functions.make
 DEFINES = -DROCKBOX -DMEMORYSIZE=$(MEMORYSIZE) $(TARGET) \
 	-DTARGET_ID=$(TARGET_ID) -DTARGET_NAME=\"$(MODELNAME)\" $(BUILDDATE) \
 	$(EXTRA_DEFINES) # <-- -DSIMULATOR or not
-INCLUDES = -I$(BUILDDIR) -I$(BUILDDIR)/lang $(TARGET_INC)
+INCLUDES = -I$(call convpath, $(BUILDDIR)) -I$(call convpath, $(BUILDDIR)/lang) $(TARGET_INC)
+
+INCLUDES +=-I$(call convpath, $(ROOTDIR)/lib/rbcodec) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/dsp) \
+		-I$(call convpath, $(ROOTDIR)/lib/rbcodec/metadata) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/codecs) -I$(call convpath, $(ROOTDIR)/lib/rbcodec/codecs/lib) \
+		-I$(call convpath, $(ROOTDIR)/lib/skin_parser) -I$(call convpath, $(ROOTDIR)/lib/fixedpoint) \
+		-I$(call convpath, $(ROOTDIR)/lib/unwarminder)
 
 CFLAGS = $(INCLUDES) $(DEFINES) $(GCCOPTS) 
+
 PPCFLAGS = $(filter-out -g -Dmain=SDL_main,$(CFLAGS)) # cygwin sdl-config fix
+
 ASMFLAGS = -D__ASSEMBLER__      # work around gcc 3.4.x bug with -std=gnu99, only meant for .S files
 CORE_LDOPTS = $(GLOBAL_LDOPTS)  # linker ops specifically for core build
 
@@ -314,11 +321,13 @@ $(BUILDDIR)/rockbox.zip:
 else
 $(BUILDDIR)/rockbox.zip: build
 endif
+
 ifndef APP_TYPE
 	$(SILENT)$(TOOLSDIR)/buildzip.pl $(VERBOSEOPT) --app=$(APPLICATION) -m \"$(MODELNAME)\" -i \"$(TARGET_ID)\"  -r "$(ROOTDIR)" --rbdir="$(RBDIR)" $(TARGET) $(BINARY) -o rockbox-RCC-$(MODELNAME)-$(BUILDVER)-`date -u +'%y%m%d'`.zip
 else
 	$(SILENT)$(TOOLSDIR)/buildzip.pl $(VERBOSEOPT) --app=$(APPLICATION) -m \"$(MODELNAME)\" -i \"$(TARGET_ID)\"  -r "$(ROOTDIR)" --rbdir="$(RBDIR)" $(TARGET) $(BINARY)
 endif
+
 
 mapzip:
 	$(SILENT)find . -name "*.map" | xargs zip rockbox-maps.zip
@@ -417,14 +426,19 @@ help:
 
 ### general compile rules:
 
+#I don't know why it's not called. But I need to call it to generate apps/core_asmdefs.h. Using below code to make it happen:
+
+DUMMY := $(shell mkdir -p $(BUILDDIR)/apps))
+DUMMY := $(shell $(call asmdefs2file, $(ROOTDIR)/apps/core_asmdefs.c, $(BUILDDIR)/apps/core_asmdefs.h))
+	
 # when source and object are in different locations (normal):
 $(BUILDDIR)/%.o: $(ROOTDIR)/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(BUILDDIR)/%.o: $(ROOTDIR)/%.S
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) $(ASMFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) $(ASMFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 # generated definitions for use in .S files
 $(BUILDDIR)/%_asmdefs.h: $(ROOTDIR)/%_asmdefs.c
@@ -435,11 +449,11 @@ $(BUILDDIR)/%_asmdefs.h: $(ROOTDIR)/%_asmdefs.c
 # when source and object are both in BUILDDIR (generated code):
 %.o: %.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 %.o: %.S
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) $(ASMFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) $(ASMFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 Makefile: $(TOOLSDIR)/configure
 ifneq (reconf,$(MAKECMDGOALS))

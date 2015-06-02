@@ -16,20 +16,23 @@ CODECS := $(subst $(RBCODECLIB_DIR),$(RBCODEC_BLD),$(CODECS))
 
 # the codec helper library
 include $(RBCODECLIB_DIR)/codecs/lib/libcodec.make
-OTHER_INC += -I$(RBCODECLIB_DIR)/codecs/lib
+OTHER_INC += -I$(call convpath,$(RBCODECLIB_DIR)/codecs/lib)
 
 # extra libraries
 CODEC_LIBS := $(CODECLIB) $(FIXEDPOINTLIB)
 
 # compile flags for codecs
 CODECFLAGS := $(CFLAGS) $(RBCODEC_CFLAGS) -fstrict-aliasing \
-			 -I$(RBCODECLIB_DIR)/codecs -I$(RBCODECLIB_DIR)/codecs/lib -DCODEC
+			 -I$(call convpath, $(RBCODECLIB_DIR)/codecs) -I$(call convpath,$(RBCODECLIB_DIR)/codecs/lib) \
+			 -I$(call convpath,$(RBCODECLIB_DIR)/codecs/libopus) -I$(call convpath,$(ROOTDIR)/lib/tlsf/src) \
+			 -I$(call convpath,$(RBCODECLIB_DIR)/codecs/libopus/celt) -I$(call convpath,$(RBCODECLIB_DIR)/codecs/libopus/silk) \
+			 -DCODEC -DFIXED_POINT -DUSE_SMALL_DIV_TABLE
 
 ifdef APP_TYPE
- CODECLDFLAGS = $(SHARED_LDFLAG) -Wl,--gc-sections -Wl,-Map,$(CODECDIR)/$*.map
+ CODECLDFLAGS = $(SHARED_LDFLAG) -Wl,--gc-sections -Wl,-Map,$(call convpath,$(CODECDIR)/$*.map)
  CODECFLAGS += $(SHARED_CFLAGS) # <-- from Makefile
 else
- CODECLDFLAGS = -T$(CODECLINK_LDS) -Wl,--gc-sections -Wl,-Map,$(CODECDIR)/$*.map
+ CODECLDFLAGS = -T$(CODECLINK_LDS) -Wl,--gc-sections -Wl,-Map,$(call convpath,$(CODECDIR)/$*.map)
  CODECFLAGS += -UDEBUG -DNDEBUG
 endif
 CODECLDFLAGS += $(GLOBAL_LDOPTS)
@@ -189,13 +192,13 @@ $(CODECS): $(CODEC_LIBS) # this must be last in codec dependency list
 $(CODECDIR)/%.o: $(RBCODECLIB_DIR)/codecs/%.c
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) \
-		-I$(dir $<) $(CODECFLAGS) -c $< -o $@
+		-I$(call convpath,$(dir $<)) $(CODECFLAGS) -c $(call convpath,$<) -o $(call convpath,$@)
 
 # pattern rule for compiling codecs
 $(CODECDIR)/%.o: $(RBCODECLIB_DIR)/codecs/%.S
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) \
-		-I$(dir $<) $(CODECFLAGS) $(ASMFLAGS) -c $< -o $@
+		-I$(dir $<) $(CODECFLAGS) $(ASMFLAGS) -c $(call convpath,$<) -o $(call convpath,$@)
 
 $(CODECDIR)/%-pre.map: $(CODEC_CRT0) $(CODECLINK_LDS) $(CODECDIR)/%.o $(CODECS_LIBS)
 	$(call PRINTS,LD $(@F))$(CC) $(CODECFLAGS) -o $(CODECDIR)/$*-pre.elf \
@@ -204,8 +207,8 @@ $(CODECDIR)/%-pre.map: $(CODEC_CRT0) $(CODECLINK_LDS) $(CODECDIR)/%.o $(CODECS_L
 		-lgcc $(subst .map,-pre.map,$(CODECLDFLAGS))
 
 $(CODECDIR)/%.codec: $(CODECDIR)/%.o
-	$(call PRINTS,LD $(@F))$(CC) $(CODECFLAGS) -o $(CODECDIR)/$*.elf \
-		$(filter %.o, $^) \
-		$(filter %.a, $+) \
+	$(call PRINTS,LD $(@F))$(CC) $(CODECFLAGS) -o $(call convpath,$(CODECDIR)/$*.elf) \
+		$(call convpath,$(filter %.o, $^)) \
+		$(call convpath,$(filter %.a, $+)) \
 		-lgcc $(CODECLDFLAGS)
-	$(SILENT)$(call objcopy,$(CODECDIR)/$*.elf,$@)
+	$(SILENT)$(call objcopy,$(call convpath,$(CODECDIR)/$*.elf),$(call convpath,$@))

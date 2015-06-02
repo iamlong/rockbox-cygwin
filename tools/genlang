@@ -209,12 +209,14 @@ sub parsetarget {
 
 my $src;
 sub source {
-    parsetarget("src", \$src, @_);
+    parsetarget("src", \$src, @_); 
+	#print $src;
 }
 
 my $dest;
 sub dest {
     parsetarget("dest", \$dest, @_);
+	#print $dest;
 }
 
 my $voice;
@@ -447,9 +449,10 @@ while(<LANG>) {
 
     $line++;
 
-    # get rid of DOS newlines
+	
+	# get rid of DOS newlines
     $_ =~ tr/\r//d;
-
+	
     if($_ =~ /^( *\#|[ \t\n\r]*\z)/) {
         # comment or empty line - output it if it's part of the header
         if ($header and ($update || $sortfile)) {
@@ -464,8 +467,8 @@ while(<LANG>) {
     # print "M: $m\n";
 
     push @phrase, $ll;
-
-    # this is an XML-lookalike tag
+	
+	# this is an XML-lookalike tag
     if (/^(<|[^\"<]+<)([^>]*)>/) {
         my $part = $2;
         # print "P: $part\n";
@@ -478,13 +481,14 @@ while(<LANG>) {
 
                 my $idstr = $phrase{'id'};
                 my $idnum;
-
+				
                 if($binary && !$english{$idstr}) {
                     # $idstr doesn't exist for english, skip it\n";
                 }
                 elsif($dest =~ /^none\z/i) {
                     # "none" as dest (without quotes) means that this entire
                     # phrase is to be ignored
+					#print "ignore IDSTR: IDSTR: $idstr\n";
                 }
                 elsif($sortfile) {
                     $allphrases{$idstr}=join('',@phrase);

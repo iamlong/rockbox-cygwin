@@ -28,7 +28,7 @@ endif
 
 $(SIMLIB): $$(SIMOBJ) $(UIBMP)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 $(BUILDDIR)/$(BINARY): $$(OBJ) $(FIRMLIB) $(VOICESPEEXLIB) $(CORE_LIBS) $(SIMLIB)
 	$(call PRINTS,LD $(BINARY))$(CC) -o $@ -Wl,--start-group $^ -Wl,--end-group $(LDOPTS) $(GLOBAL_LDOPTS) \
@@ -37,7 +37,7 @@ $(BUILDDIR)/$(BINARY): $$(OBJ) $(FIRMLIB) $(VOICESPEEXLIB) $(CORE_LIBS) $(SIMLIB
 
 $(BUILDDIR)/uisimulator/%.o: $(ROOTDIR)/uisimulator/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(SIMFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(SIMFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(UIBMP): $(ROOTDIR)/uisimulator/bitmaps/UI-$(MODELNAME).bmp
 	$(call PRINTS,CP $(@F))cp $< $@

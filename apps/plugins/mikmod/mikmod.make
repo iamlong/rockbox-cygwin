@@ -18,11 +18,11 @@ MIKMOD_OBJ := $(call c2obj, $(MIKMOD_SRC))
 # add source files to OTHER_SRC to get automatic dependencies
 OTHER_SRC += $(MIKMOD_SRC)
 
-MIKMODCFLAGS = $(PLUGINFLAGS) -I$(MIKMODSRCDIR) -O2
+MIKMODCFLAGS = $(PLUGINFLAGS) -I$(call convpath, $(MIKMODSRCDIR)) -O2
 
 $(MIKMODBUILDDIR)/mikmod.rock: $(MIKMOD_OBJ) $(TLSFLIB)
 
 # new rule needed to use extra compile flags
 $(MIKMODBUILDDIR)/%.o: $(MIKMODSRCDIR)/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(MIKMODCFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(MIKMODCFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)

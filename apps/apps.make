@@ -7,7 +7,7 @@
 # $Id$
 #
 
-INCLUDES += -I$(APPSDIR) $(patsubst %,-I$(APPSDIR)/%,$(subst :, ,$(APPEXTRA)))
+INCLUDES += -I$(call convpath, $(APPSDIR)) $(patsubst %,-I$(call convpath, $(APPSDIR)/%),$(subst :, ,$(APPEXTRA)))
 SRC += $(call preprocess, $(APPSDIR)/SOURCES)
 
 # apps/features.txt is a file that (is preprocessed and) lists named features
@@ -18,12 +18,19 @@ SRC += $(call preprocess, $(APPSDIR)/SOURCES)
 # Kludge: depends on config.o which only depends on config-*.h to have config.h
 # changes trigger a genlang re-run
 #
+DUMMY := $(shell mkdir -p $(BUILDDIR)/apps)
+DUMMY := $(shell mkdir -p $(BUILDDIR)/lang)
+DUMMY := $(shell $(CC) $(PPCFLAGS) \
+                 -E -P -imacros "config.h" -imacros "button.h" -x c $(call convpath, $(APPSDIR)/features.txt) | \
+				grep -v "^\#" | grep -v "^ *$$" > $(BUILDDIR)/apps/features;)
+#DUMMY := $(shell cp $(APPSDIR)/core_asmdefs.c $(BUILDDIR)/apps/core_asmdefs.h)
+				
 $(BUILDDIR)/apps/features: $(APPSDIR)/features.txt  $(BUILDDIR)/firmware/common/config.o
 	$(SILENT)mkdir -p $(BUILDDIR)/apps
 	$(SILENT)mkdir -p $(BUILDDIR)/lang
 	$(call PRINTS,PP $(<F))
 	$(SILENT)$(CC) $(PPCFLAGS) \
-                 -E -P -imacros "config.h" -imacros "button.h" -x c $< | \
+                 -E -P -imacros "config.h" -imacros "button.h" -x c $(call convpath, $<) | \
 		grep -v "^\#" | grep -v "^ *$$" > $(BUILDDIR)/apps/features; \
 
 $(BUILDDIR)/apps/genlang-features:  $(BUILDDIR)/apps/features

@@ -7,6 +7,7 @@
 
 # RBCODEC_BLD is defined in the calling Makefile
 RBCODECLIB_DIR := $(ROOTDIR)/lib/rbcodec
+RBCODEC_CFLAGS :=-I$(call convpath, $(APPSDIR))
 RBCODECLIB_SRC := $(call preprocess, $(RBCODECLIB_DIR)/SOURCES, \
 	$(RBCODEC_CFLAGS) -imacros rbcodecconfig.h)
 RBCODECLIB_OBJ := $(call c2obj, $(RBCODECLIB_SRC))
@@ -20,7 +21,7 @@ OTHER_SRC += $(RBCODECLIB_SRC)
 CORE_LIBS := $(RBCODECLIB) $(CORE_LIBS)
 
 $(RBCODECLIB): $(RBCODECLIB_OBJ)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 ifdef SOFTWARECODECS
   include $(RBCODECLIB_DIR)/codecs/codecs.make

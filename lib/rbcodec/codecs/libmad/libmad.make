@@ -33,7 +33,7 @@ OTHER_SRC += $(MADLIB_SRC)
 
 $(MADLIB): $(MADLIB_OBJ)
 	$(SILENT)$(shell rm -f $@)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 # libmad-mpeg
 MPEGMADLIB := $(CODECDIR)/libmad-mpeg.a
@@ -41,26 +41,26 @@ MPEGMADLIB_SRC := $(call preprocess, $(RBCODECLIB_DIR)/codecs/libmad/SOURCES)
 MPEGMADLIB_OBJ := $(addsuffix .o,$(basename $(subst $(RBCODECLIB_DIR)/codecs/libmad,$(RBCODEC_BLD)/codecs/libmad-mpeg,$(MPEGMADLIB_SRC))))
 
 $(MPEGMADLIB): $(MPEGMADLIB_OBJ)
-	$(call PRINTS,AR $(@F))$(AR) rcs $@ $^ >/dev/null
+	$(call PRINTS,AR $(@F))$(AR) rcs $(call convpath, $@) $(call convpath, $^) >/dev/null
 
 # pattern rules
 
 $(CODECDIR)/libmad-mpeg/%.o : $(RBCODECLIB_DIR)/codecs/libmad/%.c
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<)) \
-		$(CC) $(MPEGMADFLAGS) -c $< -o $@
+		$(CC) $(MPEGMADFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(CODECDIR)/libmad-mpeg/%.o : $(RBCODECLIB_DIR)/codecs/libmad/%.S
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<)) \
-		$(CC) $(MPEGMADFLAGS) $(ASMFLAGS) -c $< -o $@
+		$(CC) $(MPEGMADFLAGS) $(ASMFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(CODECDIR)/libmad/%.o: $(RBCODECLIB_DIR)/codecs/libmad/%.c
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<)) \
-		$(CC) $(MADFLAGS) -c $< -o $@
+		$(CC) $(MADFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(CODECDIR)/libmad/%.o: $(RBCODECLIB_DIR)/codecs/libmad/%.S
 	$(SILENT)mkdir -p $(dir $@)
 	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<)) \
-		$(CC) $(MADFLAGS) $(ASMFLAGS) -c $< -o $@
+		$(CC) $(MADFLAGS) $(ASMFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)

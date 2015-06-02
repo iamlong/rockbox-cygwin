@@ -16,28 +16,28 @@ ANDROID_DIR=$(ROOTDIR)/android
 # The NDK ships cpu-features.c which has a compatible function android_getCpuCount()
 CPUFEAT = $(ANDROID_NDK_PATH)/sources/android/cpufeatures
 CPUFEAT_BUILD = $(BUILDDIR)
-INCLUDES += -I$(CPUFEAT)
+INCLUDES += -I$(call convpath, $(CPUFEAT))
 OTHER_SRC += $(CPUFEAT)/cpu-features.c
 CLEANOBJS += $(CPUFEAT_BUILD)/cpu-features.o
 $(CPUFEAT_BUILD)/cpu-features.o: $(CPUFEAT)/cpu-features.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(CPUFEAT)/,,$<))$(CC) -o $@ -c $^ $(GCCOPTS) -Wno-unused
+	$(call PRINTS,CC $(subst $(CPUFEAT)/,,$<))$(CC) -o $(call convpath, $@) -c $(call convpath, $^) $(GCCOPTS) -Wno-unused
 
 .SECONDEXPANSION: # $$(JAVA_OBJ) is not populated until after this
 .SECONDEXPANSION: # $$(OBJ) is not populated until after this
 .PHONY: apk classes clean dex dirs libs jar
 
 # API version
-ANDROID_PLATFORM_VERSION=19
+ANDROID_PLATFORM_VERSION=6
 ANDROID_PLATFORM=$(ANDROID_SDK_PATH)/platforms/android-$(ANDROID_PLATFORM_VERSION)
 
 # android tools
 BUILD_TOOLS_VERSION=$(notdir $(firstword $(wildcard $(ANDROID_SDK_PATH)/build-tools/$(ANDROID_PLATFORM_VERSION).*)))
 AIDL=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/aidl
 AAPT=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/aapt
-DX=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/dx
+DX=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/dx.bat
 ZIPALIGN=$(ANDROID_SDK_PATH)/build-tools/$(BUILD_TOOLS_VERSION)/zipalign
-KEYSTORE=$(HOME)/.android/rockbox.keystore
+KEYSTORE=$(HOME)/.android/debug.keystore
 ADB=$(ANDROID_SDK_PATH)/platform-tools/adb
 BUILDAPK=$(ANDROID_DIR)/buildapk.sh
 
@@ -87,7 +87,7 @@ UMENGSDKPATH		:= $(ROOTDIR)/android/UMENG_SDK
 
 CLEANOBJS += bin gen libs data
 
-JAVAC_OPTS += -source 1.6 -target 1.6 -implicit:none -classpath $(ANDROID_PLATFORM)/android.jar:$(UMENGSDKPATH)/umeng_sdk.jar:$(UMENGSDKPATH)/annotations.jar:$(CLASSPATH)
+JAVAC_OPTS += -source 1.6 -target 1.6 -implicit:none  -xlint:deprecation -classpath "$(shell cygpath -pm $(ANDROID_PLATFORM)/android.jar:$(UMENGSDKPATH)/umeng_sdk.jar:$(UMENGSDKPATH)/annotations.jar:$(CLASSPATH))"
 
 .PHONY:
 $(MANIFEST): $(MANIFEST_SRC) $(DIRS)
@@ -95,15 +95,15 @@ $(MANIFEST): $(MANIFEST_SRC) $(DIRS)
 
 $(R_JAVA) $(AP_): $(MANIFEST) $(RES) | $(DIRS)
 	$(call PRINTS,AIDL ITelephony.aidl)$(AIDL) \
-		-p$(ANDROID_PLATFORM)/framework.aidl \
-		-I$(AIDL_SRC) \
-		$(AIDL_SRC)/com/android/internal/telephony/ITelephony.aidl \
-		$(BUILDDIR)/gen/com.android.internal.telephony/ITelephony.java
+		-p$(call convpath, $(ANDROID_PLATFORM)/framework.aidl) \
+		-I$(call convpath, $(AIDL_SRC)) \
+		$(call convpath, $(AIDL_SRC)/com/android/internal/telephony/ITelephony.aidl) \
+		$(call convpath, $(BUILDDIR)/gen/com.android.internal.telephony/ITelephony.java)
 	$(call PRINTS,AAPT resources.ap_)$(AAPT) package -f -m \
-		-J $(BUILDDIR)/gen -M $(MANIFEST) -S $(ANDROID_DIR)/res \
-		-I $(ANDROID_PLATFORM)/android.jar -F $(AP_) \
-		-I $(UMENGSDKPATH)/umeng_sdk.jar \
-		-I $(UMENGSDKPATH)/annotations.jar #注释@override
+		-J $(convpath, $(BUILDDIR)/gen) -M $(call convpath, $(MANIFEST)) -S $(call convpath, $(ANDROID_DIR)/res) \
+		-I $(call convpath, $(ANDROID_PLATFORM)/android.jar) -F $(call convpath, $(AP_)) \
+		-I $(call convpath, $(UMENGSDKPATH)/umeng_sdk.jar) \
+		-I $(call convpath, $(UMENGSDKPATH)/annotations.jar) #注释@override
 
 $(CLASSPATH)/$(PACKAGE_PATH)/R.class: $(R_JAVA)
 	$(call PRINTS,JAVAC $(subst $(ROOTDIR)/,,$<))javac -d $(BUILDDIR)/bin \
@@ -114,17 +114,16 @@ $(CLASSPATH)/$(PACKAGE_PATH)/%.class: $(ANDROID_DIR)/src/$(PACKAGE_PATH)/%.java 
 		$(JAVAC_OPTS) -sourcepath $(ANDROID_DIR)/src $<
 
 $(JAR): $(JAVA_SRC) $(R_JAVA)
-	$(call PRINTS,JAVAC $(subst $(ROOTDIR)/,,$?))javac -d $(CLASSPATH) \
-		$(JAVAC_OPTS) -sourcepath $(ANDROID_DIR)/src:$(ANDROID_DIR)/gen $?
-	$(call PRINTS,JAR $(subst $(BUILDDIR)/,,$@))jar cf $(JAR) -C $(CLASSPATH) org
-#代码混淆用	$(SILENT)$(ANDROID_SDK_PATH)/tools/proguard/bin/proguard.sh -injars $(TMPJAR) -outjars $(JAR) -libraryjars /home/zhkailing/android-sdk-linux_x86/platforms/android-15/android.jar -libraryjars /home/zhkailing/rockbox/android/UMENG_SDK/umeng_sdk.jar @$(ANDROID_DIR)/proguard.cfg
+	$(call PRINTS,JAVAC $(subst $(ROOTDIR)/,,$?))javac -d $(call convpath, $(CLASSPATH)) \
+		$(JAVAC_OPTS) -sourcepath "$(call convpath, $(ANDROID_DIR)/src);$(call convpath, $(ANDROID_DIR)/gen)" $(call convpath, $?)
+	$(call PRINTS,JAR $(subst $(BUILDDIR)/,,$@))jar cf $(call convpath, $(JAR)) -C $(call convpath, $(CLASSPATH)) org
 
 jar: $(JAR)
 
 $(DEX): $(JAR)
 	@echo "Checking for deleted class files" && $(foreach obj,$(JAVA_OBJ) $(R_OBJ), \
 		(test -f $(obj) || (echo "$(obj) is missing. Run 'make classes' to fix." && false)) && ) true
-	$(call PRINTS,DX $(subst $(BUILDDIR)/,,$@))$(DX) --dex --no-optimize --output=$@ $(UMENGSDKPATH)/umeng_sdk.jar $(UMENGSDKPATH)/annotations.jar $<
+	$(call PRINTS,DX $(subst $(BUILDDIR)/,,$@))$(DX) --dex --no-optimize --output=$(call convpath, $@) $(call convpath, $(UMENGSDKPATH)/umeng_sdk.jar) $(call convpath, $(UMENGSDKPATH)/annotations.jar) $(call convpath, $<)
 
 dex: $(DEX)
 
@@ -132,8 +131,8 @@ classes: $(R_OBJ) $(JAVA_OBJ)
 
 
 $(BUILDDIR)/$(BINARY): $$(OBJ) $(FIRMLIB) $(VOICESPEEXLIB) $(CORE_LIBS) $(CPUFEAT_BUILD)/cpu-features.o
-	$(call PRINTS,LD $(BINARY))$(CC) -o $@ $^ $(LDOPTS) $(GLOBAL_LDOPTS) -Wl,-Map,$(BUILDDIR)/rockbox.map
-	$(call PRINTS,OC $(@F))$(call objcopy,$@,$@)
+	$(call PRINTS,LD $(BINARY))$(CC) -o $(call convpath, $@) $(call convpath, $^) $(LDOPTS) $(GLOBAL_LDOPTS) -Wl,-Map,$(call convpath, $(BUILDDIR)/rockbox.map)
+	$(call PRINTS,OC $(@F))$(call objcopy,$(call convpath,$@),$(call convpath,$@))
 
 $(BINLIB_DIR)/$(BINARY): $(BUILDDIR)/$(BINARY)
 	$(call PRINTS,CP $(BINARY))cp $^ $@
@@ -147,22 +146,20 @@ $(BINLIB_DIR)/lib%.so: $(RBCODEC_BLD)/codecs/%.codec
 libs: $(DIRS) $(LIBS)
 
 $(TEMP_APK): $(AP_) $(LIBS) $(DEX) | $(DIRS)
-	$(call PRINTS,APK $(subst $(BUILDDIR)/,,$@))$(BUILDAPK) $(BUILDDIR) $(notdir $@) $(BUILD_TOOLS_VERSION)
+	$(call PRINTS,APK $(subst $(BUILDDIR)/,,$@))$(BUILDAPK) $(BUILDDIR) $(notdir $@) $(BUILD_TOOLS_VERSION) 
 
 $(KEYSTORE):
 	$(SILENT)mkdir -p $(HOME)/.android
-	$(call PRINTS,KEYTOOL rockbox.keystore)keytool -genkey \
-		-alias rockboxkey -keystore $@ \
-		-storepass rbtheme.5d6d.net -keypass rbtheme.5d6d.net -validity 40000 \
+	$(call PRINTS,KEYTOOL debug.keystore)keytool -genkey \
+		-alias androiddebugkey -keystore $(call convpath,$@) \
+		-storepass android -keypass android -validity 40000 \
 		-sigalg MD5withRSA -keyalg RSA -keysize 1024 \
-		-dname "CN=zhkailing,O=zhkailing-PC,C=CN"
-
-ifdef NODEPS
-$(APK): $(TEMP_APK) $(KEYSTORE)
-else
+		-dname "CN=szhang,O=szhang-PC,C=CN" 
+		
 $(APK): $(TEMP_APK) $(BUILDDIR)/rockbox.zip $(KEYSTORE)
 endif
 	$(SILENT)rm -f $@
+<<<<<<< HEAD
 	$(SILENT)echo "SIGN rockbox-rcc-`git rev-parse --verify --short HEAD`-$(LCD_WIDTH)x$(LCD_HEIGHT).apk"
 	$(SILENT)jarsigner \
 		-keystore "$(KEYSTORE)" -storepass "rbtheme.5d6d.net" -keypass "rbtheme.5d6d.net" \
@@ -170,6 +167,16 @@ endif
 		-sigalg MD5withRSA -digestalg SHA1
 	$(SILENT)echo "ZIPALIGN rockbox-rcc-`git rev-parse --verify --short HEAD`-$(LCD_WIDTH)x$(LCD_HEIGHT).apk"
 	$(SILENT)$(ZIPALIGN) -v 4 $(TEMP_APK2) $@ > /dev/null
+=======
+	$(call PRINTS,SIGN $(subst $(BUILDDIR)/,,$@))$(warning jarsigner \
+		-keystore "$(call convpath,$(KEYSTORE))" -storepass "android" -keypass "android" \
+		-signedjar $(call convpath,$(TEMP_APK2)) $(call convpath,$(TEMP_APK)) "androiddebugkey" \
+		-sigalg MD5withRSA -digestalg SHA1)	jarsigner \
+		-keystore "$(call convpath,$(KEYSTORE))" -storepass "android" -keypass "android" \
+		-signedjar $(call convpath,$(TEMP_APK2)) $(call convpath,$(TEMP_APK)) "androiddebugkey" \
+		-sigalg MD5withRSA -digestalg SHA1
+	$(SILENT)$(waring $(ZIPALIGN) -v 4 $(call convpath, $(TEMP_APK2)) $(call convpath,$@))$(ZIPALIGN) -v 4 $(call convpath, $(TEMP_APK2)) $(call convpath,$@) > /dev/null
+>>>>>>> v6
 
 $(DIRS):
 	$(SILENT)mkdir -p $@

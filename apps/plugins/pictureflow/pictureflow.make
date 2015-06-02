@@ -46,13 +46,13 @@ $(PICTUREFLOW_OUTLDS): $(PLUGIN_LDS) $(PICTUREFLOW_OBJDIR)/pictureflow.refmap
 		$(TOOLSDIR)/ovl_offset.pl $(PICTUREFLOW_OBJDIR)/pictureflow.refmap))
 
 $(PICTUREFLOW_OBJDIR)/pictureflow.ovl: $(PICTUREFLOW_OBJ) $(PICTUREFLOW_OUTLDS)
-	$(SILENT)$(CC) $(PLUGINFLAGS) -o $(basename $@).elf \
-		$(filter %.o, $^) \
-		$(filter %.a, $+) \
+	$(SILENT)$(CC) $(PLUGINFLAGS) -o $(call convpath, $(basename $@).elf) \
+		$(call convpath, $(filter %.o, $^)) \
+		$(call convpath, $(filter %.a, $+)) \
 		-lgcc $(PICTUREFLOW_OVLFLAGS)
-	$(call PRINTS,LD $(@F))$(call objcopy,$(basename $@).elf,$@)
+	$(call PRINTS,LD $(@F))$(call objcopy,$(call convpath, $(basename $@).elf),$(call convpath, $@))
 
 # special pattern rule for compiling pictureflow with extra flags
 $(PICTUREFLOW_OBJDIR)/%.o: $(PICTUREFLOW_SRCDIR)/%.c $(PICTUREFLOW_SRCDIR)/pictureflow.make
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(dir $<) $(PICTUREFLOWFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(call convpath, $(dir $<)) $(PICTUREFLOWFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)

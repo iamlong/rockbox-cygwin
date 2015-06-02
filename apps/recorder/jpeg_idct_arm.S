@@ -40,6 +40,9 @@
     .type   jpeg_idct8v, %function
     .global jpeg_idct8h
     .type   jpeg_idct8h, %function
+	
+pix8_size:
+	.word	AD_pix8_size
 
 jpeg_idct1h:
 /* In the common case of one pass through the loop, the extra add should be
@@ -132,7 +135,10 @@ jpeg_idct2h:
     cmp    r4,  #255
     mvnhi  r4,  r4,  asr #31
     strb   r5,  [r1]
-    strb   r4,  [r1, #pix8_size]
+	push {r1}
+	add r1, #pix8_size
+    strb   r4,  [r1]
+	pop {r1}
     add    r0,  r0,  #16
     add    r1,  r1,  r3
     cmp    r0,  r2
@@ -359,9 +365,14 @@ jpeg_idct4h:
     cmp    r9,  #255
     mvnhi  r9,  r9,  asr #31
     strb   r6,  [r1]
-    strb   r14, [r1, #pix8_size]
-    strb   r12, [r1, #2*pix8_size]
-    strb   r9,  [r1, #3*pix8_size]
+	push {r1}
+	add    r1,  #pix8_size
+    strb   r14, [r1]
+	add    r1,  #pix8_size
+    strb   r12, [r1]
+	add    r1,  #pix8_size
+    strb   r9,  [r1]
+	pop {r1}
     add    r0,  r0,  #16
     add    r1,  r1,  r3
     cmp    r0,  r2
@@ -390,9 +401,21 @@ jpeg_idct4h:
     usat  r12, #8,  r12, asr #18
     usat  r14, #8,  r14, asr #18
     strb   r8,  [r1]
-    strb   r6,  [r1, #3*pix8_size]
-    strb   r12, [r1, #pix8_size]
-    strb   r14, [r1, #2*pix8_size]
+	push {r1}
+	add r1, #pix8_size
+	add r1, #pix8_size
+	add r1, #pix8_size
+    strb   r6,  [r1]
+	pop {r1}
+	push {r1}
+	add r1, #pix8_size
+    strb   r12, [r1]
+	pop {r1}
+	push {r1}
+	add r1, #pix8_size
+	add r1, #pix8_size
+    strb   r14, [r1]
+	pop {r1}
     add   r0,  r0,  #16
     add   r1,  r1,  r3
     cmp    r0,  r2
@@ -621,13 +644,22 @@ jpeg_idct8h:
     cmp    r8,  #255
     mvnhi  r8,  r8,  asr #31
     strb   r8,  [r1]
-    strb   r8,  [r1, #pix8_size]
-    strb   r8,  [r1, #2*pix8_size]
-    strb   r8,  [r1, #3*pix8_size]
-    strb   r8,  [r1, #4*pix8_size]
-    strb   r8,  [r1, #5*pix8_size]
-    strb   r8,  [r1, #6*pix8_size]
-    strb   r8,  [r1, #7*pix8_size]
+	push {r1}
+	add r1, #pix8_size
+    strb   r8,  [r1]
+	add r1, #pix8_size
+    strb   r8,  [r1]
+	add r1, #pix8_size
+    strb   r8,  [r1]
+	add r1, #pix8_size
+    strb   r8,  [r1]
+	add r1, #pix8_size
+    strb   r8,  [r1]
+	add r1, #pix8_size
+    strb   r8,  [r1]
+	add r1, #pix8_size
+    strb   r8,  [r1]
+	pop {r1}
     add    r1,  r1,  r3
     cmp    r0,  r2
     bcc    1b
@@ -717,13 +749,22 @@ jpeg_idct8h:
     cmp    r14, #255
     mvnhi  r14, r14, asr #31
     strb   r12, [r1]
-    strb   r4,  [r1, #pix8_size]
-    strb   r10, [r1, #2*pix8_size]
-    strb   r8,  [r1, #3*pix8_size]
-    strb   r9,  [r1, #4*pix8_size]
-    strb   r11, [r1, #5*pix8_size]
-    strb   r5,  [r1, #6*pix8_size]
-    strb   r14, [r1, #7*pix8_size]
+	pushi {r1}
+	add r1, #pix8_size
+    strb   r4,  [r1]
+	add r1, #pix8_size
+    strb   r10, [r1]
+	add r1, #pix8_size
+    strb   r8,  [r1]
+	add r1, #pix8_size
+    strb   r9,  [r1]
+	add r1, #pix8_size
+    strb   r11, [r1]
+	add r1, #pix8_size
+    strb   r5,  [r1]
+	add r1, #pix8_size
+    strb   r14, [r1]
+	pop {r1}
 #else /* ARMv5+ */
     add    r12, r14, r4,  lsl #16
     orrs   r9,  r6,  r7
@@ -733,13 +774,22 @@ jpeg_idct8h:
     cmp    r12, #255
     mvnhi  r12, r12, asr #31
     strb   r12, [r1]
-    strb   r12, [r1, #pix8_size]
-    strb   r12, [r1, #2*pix8_size]
-    strb   r12, [r1, #3*pix8_size]
-    strb   r12, [r1, #4*pix8_size]
-    strb   r12, [r1, #5*pix8_size]
-    strb   r12, [r1, #6*pix8_size]
-    strb   r12, [r1, #7*pix8_size]
+	push {r1}
+	add r1, #pix8_size
+    strb   r12, [r1]
+	add r1, #pix8_size
+    strb   r12, [r1]
+	add r1, #pix8_size
+    strb   r12, [r1]
+	add r1, #pix8_size
+    strb   r12, [r1]
+	add r1, #pix8_size
+    strb   r12, [r1]
+	add r1, #pix8_size
+    strb   r12, [r1]
+	add r1, #pix8_size
+    strb   r12, [r1]
+	pop {r1}
     add    r1,  r1,  r3
     cmp    r0,  r2
     bcc    1b
@@ -815,13 +865,22 @@ jpeg_idct8h:
     cmp    r11, #255
     mvnhi  r11, r11, asr #31
     strb   r10, [r1]
-    strb   r12, [r1, #pix8_size]
-    strb   r8,  [r1, #2*pix8_size]
-    strb   r6,  [r1, #3*pix8_size]
-    strb   r7,  [r1, #4*pix8_size]
-    strb   r9,  [r1, #5*pix8_size]
-    strb   r14, [r1, #6*pix8_size]
-    strb   r11, [r1, #7*pix8_size]
+	push {r1}
+	add r1, #pix8_size
+    strb   r12, [r1]
+	add r1, #pix8_size
+    strb   r8,  [r1]
+	add r1, #pix8_size
+    strb   r6,  [r1]
+	add r1, #pix8_size
+    strb   r7,  [r1]
+	add r1, #pix8_size
+    strb   r9,  [r1]
+	add r1, #pix8_size
+    strb   r14, [r1]
+	add r1, #pix8_size
+    strb   r11, [r1]
+	pop {r1}
 #endif
     add    r1,  r1,  r3
     cmp    r0,  r2

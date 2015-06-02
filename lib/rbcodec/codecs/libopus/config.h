@@ -25,7 +25,9 @@
 #define HAVE_LRINT  0
 
 /* embedded stuff */
+#ifndef FIXED_POINT
 #define FIXED_POINT
+#endif
 #define DISABLE_FLOAT_API
 #define EMBEDDED_ARM 1
 

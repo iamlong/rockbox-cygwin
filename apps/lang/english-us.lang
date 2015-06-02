@@ -14,7 +14,92 @@
 # This software is distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY
 # KIND, either express or implied.
 #
-# American English language file
+# This is the master of the language files. This is the original, the one with
+# all the existing strings Rockbox features.
+#
+# The target names used for target-specific strings are set in the ARCHOS
+# variable in the root Makefile
+#
+# *WARNING*
+#
+# If you want to add a new string, add it to the end of this file!
+# Removing strings will break the numbering of strings in binary lang files and
+# voice files so instead of removing a unused <phrase>, change the desc field
+# to "deprecated" (without quotes) and either blank the strings or change them to
+# "deprecated" (without quotes) and do *not* change the targets.
+#
+# If you re-order things or remove entries, you must bump the binary language
+# file version number in both the 'genlang' tool and the language loader code.
+#
+# The "voice" entry contains how we want the speech UI to pronounce the phrase.
+#
+# Since this file is both the master for the language system, as well as the
+# source for generating english strings, make sure that all <source> strings
+# are *identical* to the <dest> strings within the english.lang file. The
+# <source> strings are the ones that'll be exposed and used by other languages
+# when doing updates etc, while the <dest> ones are used when this file is
+# used to simply get the full set of english strings for a particular target.
+#
+# All phrases have a default string like: *: "default" that will be used if no
+# other string matches for the particular model you build the language for. If
+# you want a particular string for the iriver iriverh300 series you'd write it like:
+# iriverh300: "iriverh300-specific string" (below the default line). If your string isn't
+# used for all targets set the default to none like: *: none (no quotes!) this
+# will not include the string for target that will not need it, see
+# apps/features.txt for available categories that can be used instead of the
+# target name, for example: swcodec: "swcodec-specific string".
+#
+#
+# The target names used are picked from the configure script and are set in the
+# MODELNAME variable in the root makefile. Currently, they are:
+# Target        Target string
+# Archos
+# Player/Studio     archosplayer
+# Recorder          archosrecorder
+# FM Recorder       archosfmrecorder
+# Recorder V2       archosrecorderv2
+# Ondio SP          archosondiosp
+# Ondio FM          archosondiofm
+# iriver
+# H100/H110/H115    iriverh100
+# H120/H140         iriverh120
+# H320/H340         iriverh300
+# H10               iriverh10
+# IFP 7XX           iriverifp7xx
+# iaudio/Cowon
+# X5                iaudiox5
+# M5                iaudiom5
+# D2                cowond2*
+# ipod
+# All iPods         ipod*
+# 4G Color/Photo    ipodcolor
+# Nano              ipodnano1g
+# Video (5G)        ipodvideo
+# 3G                ipod3g
+# 4G gray           ipod4g
+# mini              ipodmini1g
+# mini 2G           ipodmini2g
+# Toshiba
+# All gigabeats     gigabeat*
+# Gigabeat Fxx      gigabeatfx
+# Gigabeat Sxx      gigabeats
+# Sandisk
+# Sansa E200        sansae200*
+# Sansa C200        sansac200*
+# Sansa Fuze        sansafuze*
+# Sansa Clip        sansaclip*
+# Olympus
+# m:robe 100        mrobe100
+# m:robe 500        mrobe500
+# Mpio
+# HD200             mpiohd200
+# HD300             mpiohd300
+# Packard Bell
+# Vibe 500          vibe500
+# Philips
+# GoGear SA9200     gogearsa9200
+# Samsung
+# YH820/YH920/YH925 samsungyh*
 <phrase>
   id: LANG_SET_BOOL_YES
   desc: bool true representation
@@ -191,10 +276,10 @@
     *: "Cancelled"
   </source>
   <dest>
-    *: "Canceled"
+    *: "Cancelled"
   </dest>
   <voice>
-    *: "Canceled"
+    *: "Cancelled"
   </voice>
 </phrase>
 <phrase>
@@ -251,6 +336,7 @@
     mrobe500: "PLAY, POWER, or top-right = Yes"
     archosplayer: "(PLAY/STOP)"
     vibe500: "OK = Yes"
+    creativezen*: "Select = Yes"
   </source>
   <dest>
     *: "PLAY = Yes"
@@ -260,6 +346,7 @@
     mrobe500: "PLAY, POWER, or top-right = Yes"
     archosplayer: "(PLAY/STOP)"
     vibe500: "OK = Yes"
+    creativezen*: "Select = Yes"
   </dest>
   <voice>
     *: ""
@@ -1142,11 +1229,11 @@
   </source>
   <dest>
     *: none
-    swcodec: "Center Frequency"
+    swcodec: "Centre Frequency"
   </dest>
   <voice>
     *: none
-    swcodec: "Center frequency"
+    swcodec: "Centre frequency"
   </voice>
 </phrase>
 <phrase>
@@ -1312,11 +1399,11 @@
   </source>
   <dest>
     *: none
-    masf: "MDB Center Frequency"
+    masf: "MDB Centre Frequency"
   </dest>
   <voice>
     *: none
-    masf: "MDB Center Frequency"
+    masf: "MDB Centre Frequency"
   </voice>
 </phrase>
 <phrase>
@@ -2785,11 +2872,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Background Color"
+    lcd_color: "Background Colour"
   </dest>
   <voice>
     *: none
-    lcd_color: "Background Color"
+    lcd_color: "Background Colour"
   </voice>
 </phrase>
 <phrase>
@@ -2802,11 +2889,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Foreground Color"
+    lcd_color: "Foreground Colour"
   </dest>
   <voice>
     *: none
-    lcd_color: "Foreground Color"
+    lcd_color: "Foreground Colour"
   </voice>
 </phrase>
 <phrase>
@@ -2819,11 +2906,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Reset Colors"
+    lcd_color: "Reset Colours"
   </dest>
   <voice>
     *: none
-    lcd_color: "Reset Colors"
+    lcd_color: "Reset Colours"
   </voice>
 </phrase>
 <phrase>
@@ -2870,7 +2957,7 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Invalid color"
+    lcd_color: "Invalid colour"
   </dest>
   <voice>
     *: none
@@ -6194,7 +6281,7 @@
   </source>
   <dest>
     *: none
-    recording: "Prerecording"
+    recording: "Pre-Recording"
   </dest>
   <voice>
     *: none
@@ -6468,10 +6555,10 @@
     *: "Playlist Catalogue"
   </source>
   <dest>
-    *: "Playlist Catalog"
+    *: "Playlist Catalogue"
   </dest>
   <voice>
-    *: "Playlist Catalog"
+    *: "Playlist Catalogue"
   </voice>
 </phrase>
 <phrase>
@@ -6653,7 +6740,7 @@
   <dest>
     *: none
     multivolume: "HD1"
-    sansae200*,sansac200*,sansafuze*,sansaclipplus: "mSD:"
+    sansae200*,sansac200*,sansafuze*,sansaclipplus: "MSD:"
     archosondio*: "MMC:"
   </dest>
   <voice>
@@ -6965,10 +7052,10 @@
     *: "View Catalogue"
   </source>
   <dest>
-    *: "View Catalog"
+    *: "View Catalogue"
   </dest>
   <voice>
-    *: "View Catalog"
+    *: "View Catalogue"
   </voice>
 </phrase>
 <phrase>
@@ -7907,6 +7994,8 @@
     *: "Time"
   </voice>
 </phrase>
+/* TODO: cleanup LANG_USB_CHARGING unless HAVE_USB_CHARGING_ENABLE defined,
+ * the selector should probably be usb_charging_enable_enable as well. */
 <phrase>
   id: LANG_USB_CHARGING
   desc: in Battery menu
@@ -9029,7 +9118,7 @@
     *: ""
   </dest>
   <voice>
-    *: "milliamp hours"
+    *: "milli-amp hours"
   </voice>
 </phrase>
 <phrase>
@@ -10192,11 +10281,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Primary Color"
+    lcd_color: "Primary Colour"
   </dest>
   <voice>
     *: none
-    lcd_color: "Primary Color"
+    lcd_color: "Primary Colour"
   </voice>
 </phrase>
 <phrase>
@@ -10209,11 +10298,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Secondary Color"
+    lcd_color: "Secondary Colour"
   </dest>
   <voice>
     *: none
-    lcd_color: "Secondary Color"
+    lcd_color: "Secondary Colour"
   </voice>
 </phrase>
 <phrase>
@@ -10226,11 +10315,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Text Color"
+    lcd_color: "Text Colour"
   </dest>
   <voice>
     *: none
-    lcd_color: "Text Color"
+    lcd_color: "Text Colour"
   </voice>
 </phrase>
 <phrase>
@@ -10243,11 +10332,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Bar (Solid Color)"
+    lcd_color: "Bar (Solid Colour)"
   </dest>
   <voice>
     *: none
-    lcd_color: "Bar (Solid Color)"
+    lcd_color: "Bar (Solid Colour)"
   </voice>
 </phrase>
 <phrase>
@@ -10260,11 +10349,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Bar (Gradient Color)"
+    lcd_color: "Bar (Gradient Colour)"
   </dest>
   <voice>
     *: none
-    lcd_color: "Bar (Gradient Color)"
+    lcd_color: "Bar (Gradient Colour)"
   </voice>
 </phrase>
 <phrase>
@@ -10305,11 +10394,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Colors"
+    lcd_color: "Colours"
   </dest>
   <voice>
     *: none
-    lcd_color: "Colors"
+    lcd_color: "Colours"
   </voice>
 </phrase>
 <phrase>
@@ -10322,11 +10411,11 @@
   </source>
   <dest>
     *: none
-    lcd_color: "Line Selector Colors"
+    lcd_color: "Line Selector Colours"
   </dest>
   <voice>
     *: none
-    lcd_color: "Line Selector Colors"
+    lcd_color: "Line Selector Colours"
   </voice>
 </phrase>
 <phrase>
@@ -11544,11 +11633,11 @@
   </source>
   <dest>
     *: none
-    lcd_bitmap: "Scrollbar Width"
+    lcd_bitmap: "Scroll Bar Width"
   </dest>
   <voice>
     *: none
-    lcd_bitmap: "Scrollbar width"
+    lcd_bitmap: "Scroll bar width"
   </voice>
 </phrase>
 <phrase>
@@ -11561,11 +11650,11 @@
   </source>
   <dest>
     *: none
-    lcd_bitmap: "Scrollbar Position"
+    lcd_bitmap: "Scroll Bar Position"
   </dest>
   <voice>
     *: none
-    lcd_bitmap: "Scrollbar position"
+    lcd_bitmap: "Scroll bar position"
   </voice>
 </phrase>
 <phrase>
@@ -11838,6 +11927,23 @@
   <voice>
     *: none
     swcodec: "Soft Knee"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_COMPRESSOR_ATTACK
+  desc: in sound settings
+  user: core
+  <source>
+    *: none
+    swcodec: "Attack Time"
+  </source>
+  <dest>
+    *: none
+    swcodec: "Attack Time"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "Attack Time"
   </voice>
 </phrase>
 <phrase>
@@ -12281,15 +12387,15 @@
   user: core
   <source>
     *: none
-    gigabeats: "Tone Controls"
+    gigabeats,samsungypr1: "Tone Controls"
   </source>
   <dest>
     *: none
-    gigabeats: "Tone Controls"
+    gigabeats,samsungypr1: "Tone Controls"
   </dest>
   <voice>
     *: none
-    gigabeats: "Tone Controls"
+    gigabeats,samsungypr1: "Tone Controls"
   </voice>
 </phrase>
 <phrase>
@@ -12298,15 +12404,15 @@
   user: core
   <source>
     *: none
-    gigabeats: "Advanced Tone Control Settings"
+    gigabeats,samsungypr1: "Advanced Tone Control Settings"
   </source>
   <dest>
     *: none
-    gigabeats: "Advanced Tone Control Settings"
+    gigabeats,samsungypr1: "Advanced Tone Control Settings"
   </dest>
   <voice>
     *: none
-    gigabeats: "Advanced Tone Control Settings"
+    gigabeats,samsungypr1: "Advanced Tone Control Settings"
   </voice>
 </phrase>
 <phrase>
@@ -12315,15 +12421,15 @@
   user: core
   <source>
     *: none
-    gigabeats: "Band %d Gain"
+    gigabeats,samsungypr1: "Band %d Gain"
   </source>
   <dest>
     *: none
-    gigabeats: "Band %d Gain"
+    gigabeats,samsungypr1: "Band %d Gain"
   </dest>
   <voice>
     *: none
-    gigabeats: "Band Gain"
+    gigabeats,samsungypr1: "Band Gain"
   </voice>
 </phrase>
 <phrase>
@@ -12332,15 +12438,15 @@
   user: core
   <source>
     *: none
-    gigabeats: "Band %d Frequency"
+    gigabeats,samsungypr1: "Band %d Frequency"
   </source>
   <dest>
     *: none
-    gigabeats: "Band %d Frequency"
+    gigabeats,samsungypr1: "Band %d Frequency"
   </dest>
   <voice>
     *: none
-    gigabeats: "Band Frequency"
+    gigabeats,samsungypr1: "Band Frequency"
   </voice>
 </phrase>
 <phrase>
@@ -12349,15 +12455,15 @@
   user: core
   <source>
     *: none
-    gigabeats: "Band %d Width"
+    gigabeats,samsungypr1: "Band %d Width"
   </source>
   <dest>
     *: none
-    gigabeats: "Band %d Width"
+    gigabeats,samsungypr1: "Band %d Width"
   </dest>
   <voice>
     *: none
-    gigabeats: "Band Width"
+    gigabeats,samsungypr1: "Band Width"
   </voice>
 </phrase>
 <phrase>
@@ -12366,15 +12472,15 @@
   user: core
   <source>
     *: none
-    gigabeats: "Narrow"
+    gigabeats,samsungypr1: "Narrow"
   </source>
   <dest>
     *: none
-    gigabeats: "Narrow"
+    gigabeats,samsungypr1: "Narrow"
   </dest>
   <voice>
     *: none
-    gigabeats: "Narrow"
+    gigabeats,samsungypr1: "Narrow"
   </voice>
 </phrase>
 <phrase>
@@ -12383,15 +12489,15 @@
   user: core
   <source>
     *: none
-    gigabeats: "Wide"
+    gigabeats,samsungypr1: "Wide"
   </source>
   <dest>
     *: none
-    gigabeats: "Wide"
+    gigabeats,samsungypr1: "Wide"
   </dest>
   <voice>
     *: none
-    gigabeats: "Wide"
+    gigabeats,samsungypr1: "Wide"
   </voice>
 </phrase>
 <phrase>
@@ -12400,15 +12506,15 @@
   user: core
   <source>
     *: none
-    gigabeats,mpiohd200,mpiohd300,sansafuzeplus,creativezenxfi2,creativezenxfi3: "3-D Enhancement"
+    depth_3d: "3-D Enhancement"
   </source>
   <dest>
     *: none
-    gigabeats,mpiohd200,mpiohd300,sansafuzeplus,creativezenxfi2,creativezenxfi3: "3-D Enhancement"
+    depth_3d: "3-D Enhancement"
   </dest>
   <voice>
     *: none
-    gigabeats,mpiohd200,mpiohd300,sansafuzeplus,creativezenxfi2,creativezenxfi3: "3-D Enhancement"
+    depth_3d: "3-D Enhancement"
   </voice>
 </phrase>
 <phrase>
@@ -12693,6 +12799,34 @@
   </voice>
 </phrase>
 <phrase>
+  id: LANG_SET_AS_PLAYLISTCAT_DIR
+  desc: used in the onplay menu to set a playlist catalogue dir
+  user: core
+  <source>
+    *: "Set As Playlist Catalogue Directory"
+  </source>
+  <dest>
+    *: "Set As Playlist Catalogue Directory"
+  </dest>
+  <voice>
+    *: "Set As Playlist Catalogue Directory"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_RESET_PLAYLISTCAT_DIR
+  desc:
+  user: core
+  <source>
+    *: "Reset Playlist Catalogue Directory"
+  </source>
+  <dest>
+    *: "Reset Playlist Catalogue Directory"
+  </dest>
+  <voice>
+    *: "Reset Playlist Catalogue Directory"
+  </voice>
+</phrase>
+<phrase>
   id: LANG_CURRENT_PLAYLIST
   desc: Used when you need to say playlist, also voiced
   user: core
@@ -12707,20 +12841,6 @@
   </voice>
 </phrase>
 <phrase>
-  id: LANG_SET_AS_PLAYLISTCAT_DIR
-  desc: used in the onplay menu to set a playlist catalogue dir
-  user: core
-  <source>
-    *: "Set As Playlist Catalogue Directory"
-  </source>
-  <dest>
-    *: "Set As Playlist Catalog Directory"
-  </dest>
-  <voice>
-    *: "Set As Playlist Catalog Directory"
-  </voice>
-</phrase>
-<phrase>
   id: LANG_SAVE_CHANGES
   desc: When you try to exit screens to confirm save
   user: core
@@ -12732,20 +12852,6 @@
   </dest>
   <voice>
     *: "Save Changes?"
-  </voice>
-</phrase>
-<phrase>
-  id: LANG_RESET_PLAYLISTCAT_DIR
-  desc:
-  user: core
-  <source>
-    *: "Reset Playlist Catalogue Directory"
-  </source>
-  <dest>
-    *: "Reset Playlist Catalog Directory"
-  </dest>
-  <voice>
-    *: "Reset Playlist Catalog Directory"
   </voice>
 </phrase>
 <phrase>
@@ -12797,20 +12903,6 @@
   </voice>
 </phrase>
 <phrase>
-  id: LANG_SLEEP_TIMER_CANCEL_CURRENT
-  desc: shown instead of sleep timer when it's running
-  user: core
-  <source>
-    *: "Cancel Sleep Timer"
-  </source>
-  <dest>
-    *: "Cancel Sleep Timer"
-  </dest>
-  <voice>
-    *: "Cancel Sleep Timer"
-  </voice>
-</phrase>
-<phrase>
   id: LANG_SLEEP_TIMER_DURATION
   desc: default sleep timer duration in minutes
   user: core
@@ -12839,34 +12931,59 @@
   </voice>
 </phrase>
 <phrase>
-  id: LANG_GLYPHS
-  desc: in settings_menu
+  id: LANG_SLEEP_TIMER_CANCEL_CURRENT
+  desc: shown instead of sleep timer when it's running
   user: core
   <source>
-    *: "Glyphs To Cache"
+    *: "Cancel Sleep Timer"
   </source>
   <dest>
-    *: "Glyphs To Cache"
+    *: "Cancel Sleep Timer"
   </dest>
   <voice>
-    *: "Glyphs To Cache"
+    *: "Cancel Sleep Timer"
   </voice>
 </phrase>
 <phrase>
-  id: LANG_KEYCLICK_HARDWARE
-  desc: in keyclick settings menu
+  id: LANG_LIST_SEPARATOR
+  desc: line between lines in lists
   user: core
   <source>
-    *: none
-    hardware_click: "Speaker Keyclick"
+    *: "Line Separator"
   </source>
   <dest>
-    *: none
-    hardware_click: "Speaker Keyclick"
+    *: "Line Separator"
   </dest>
   <voice>
-    *: none
-    hardware_click: "Speaker Keyclick"
+    *: "Line Separator"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_LIST_SEPARATOR_COLOR
+  desc: line between lines in lists
+  user: core
+  <source>
+    *: "Line Separator Colour"
+  </source>
+  <dest>
+    *: "Line Separator Colour"
+  </dest>
+  <voice>
+    *: "Line Separator Colour"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_SHORTCUTS
+  desc: Title in the shortcuts menu
+  user: core
+  <source>
+    *: "Shortcuts"
+  </source>
+  <dest>
+    *: "Shortcuts"
+  </dest>
+  <voice>
+    *: "Shortcuts"
   </voice>
 </phrase>
 <phrase>
@@ -12887,17 +13004,34 @@
   </voice>
 </phrase>
 <phrase>
-  id: LANG_SHORTCUTS
-  desc: Title in the shortcuts menu
+  id: LANG_KEYCLICK_HARDWARE
+  desc: in keyclick settings menu
   user: core
   <source>
-    *: "Shortcuts"
+    *: none
+    hardware_click: "Speaker Keyclick"
   </source>
   <dest>
-    *: "Shortcuts"
+    *: none
+    hardware_click: "Speaker Keyclick"
   </dest>
   <voice>
-    *: "Shortcuts"
+    *: none
+    hardware_click: "Speaker Keyclick"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_GLYPHS
+  desc: in settings_menu
+  user: core
+  <source>
+    *: "Glyphs To Cache"
+  </source>
+  <dest>
+    *: "Glyphs To Cache"
+  </dest>
+  <voice>
+    *: "Glyphs To Cache"
   </voice>
 </phrase>
 <phrase>
@@ -12929,20 +13063,34 @@
   </voice>
 </phrase>
 <phrase>
-  id: LANG_CROSSFEED_MEIER
-  desc: in sound settings
+  id: LANG_CONSTRAIN_NEXT_FOLDER
+  desc: in settings_menu. Whether LANG_NEXT_FOLDER should be constrained to directories within LANG_SET_AS_START_DIR
+  user: core
+  <source>
+    *: "Constrain Auto-Change"
+  </source>
+  <dest>
+    *: "Constrain Auto-Change"
+  </dest>
+  <voice>
+    *: "Constrain Auto-Change"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_USE_SHORTCUTS_INSTEAD_OF_QS
+  desc: in settings_menu.
   user: core
   <source>
     *: none
-    swcodec: "Simple (Meier)"
+    quickscreen: "Use Shortcuts Menu Instead of Quick Screen"
   </source>
   <dest>
     *: none
-    swcodec: "Simple (Meier)"
+    quickscreen: "Use Shortcuts Menu Instead of Quick Screen"
   </dest>
   <voice>
     *: none
-    swcodec: "Simple"
+    quickscreen: "Use Shortcuts Menu Instead of Quick Screen"
   </voice>
 </phrase>
 <phrase>
@@ -12974,6 +13122,23 @@
   </voice>
 </phrase>
 <phrase>
+  id: LANG_CROSSFEED_MEIER
+  desc: in sound settings
+  user: core
+  <source>
+    *: none
+    swcodec: "Simple (Meier)"
+  </source>
+  <dest>
+    *: none
+    swcodec: "Simple (Meier)"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "Simple"
+  </voice>
+</phrase>
+<phrase>
   id: LANG_CROSSFEED_CUSTOM
   desc: in sound settings
   user: core
@@ -12988,37 +13153,6 @@
   <voice>
     *: none
     swcodec: "Custom"
-  </voice>
-</phrase>
-<phrase>
-  id: LANG_USE_SHORTCUTS_INSTEAD_OF_QS
-  desc: in settings_menu.
-  user: core
-  <source>
-    *: none
-    quickscreen: "Use Shortcuts Menu Instead of Quick Screen"
-  </source>
-  <dest>
-    *: none
-    quickscreen: "Use Shortcuts Menu Instead of Quick Screen"
-  </dest>
-  <voice>
-    *: none
-    quickscreen: "Use Shortcuts Menu Instead of Quick Screen"
-  </voice>
-</phrase>
-<phrase>
-  id: LANG_CONSTRAIN_NEXT_FOLDER
-  desc: in settings_menu. Whether LANG_NEXT_FOLDER should be constrained to directories within LANG_SET_AS_START_DIR
-  user: core
-  <source>
-    *: "Constrain Auto-Change"
-  </source>
-  <dest>
-    *: "Constrain Auto-Change"
-  </dest>
-  <voice>
-    *: "Constrain Auto-Change"
   </voice>
 </phrase>
 <phrase>
@@ -13047,5 +13181,297 @@
   </dest>
   <voice>
     *: "Select directories to scan"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_FILTER_ROLL_OFF
+  desc: in sound settings
+  user: core
+  <source>
+    *: "DAC's filter roll-off"
+  </source>
+  <dest>
+    *: "DAC's filter roll-off"
+  </dest>
+  <voice>
+    *: "DAC's filter roll-off"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_FILTER_SHARP
+  desc: in sound settings
+  user: core
+  <source>
+    *: "Sharp"
+  </source>
+  <dest>
+    *: "Sharp"
+  </dest>
+  <voice>
+    *: "Sharp"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_FILTER_SLOW
+  desc: in sound settings
+  user: core
+  <source>
+    *: "Slow"
+  </source>
+  <dest>
+    *: "Slow"
+  </dest>
+  <voice>
+    *: "Slow"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_VOLUME_LIMIT
+  desc: in sound_settings
+  user: core
+  <source>
+    *: "Maximum Volume Limit"
+  </source>
+  <dest>
+    *: "Maximum Volume Limit"
+  </dest>
+  <voice>
+    *: "Maximum Volume Limit"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_SYSFONT_EQUALIZER_BAND_Q
+  desc: in the equalizer settings menu
+  user: core
+  <source>
+    *: none
+    swcodec: "Q"
+  </source>
+  <dest>
+    *: none
+    swcodec: "Q"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "Q"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_PBE
+  desc: in sound settings
+  user: core
+  <source>
+    *: none
+    swcodec: "Perceptual Bass Enhancement"
+  </source>
+  <dest>
+    *: none
+    swcodec: "Perceptual Bass Enhancement"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "Perceptual Bass Enhancement"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_AFR
+  desc: in sound settings
+  user: core
+  <source>
+    *: none
+    swcodec: "Auditory Fatigue Reduction"
+  </source>
+  <dest>
+    *: none
+    swcodec: "Auditory Fatigue Reduction"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "Auditory Fatigue Reduction"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_SURROUND
+  desc: in the sound settings menu
+  user: core
+  <source>
+    *: none
+    swcodec: "Haas Surround"
+  </source>
+  <dest>
+    *: none
+    swcodec: "Haas Surround"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "Haas Surround"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_SURROUND_FX1
+  desc: in sound settings
+  user: core
+  <source>
+    *: none
+    swcodec: "f(x1)"
+  </source>
+  <dest>
+    *: none
+    swcodec: "f(x1)"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "f(x1)"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_SURROUND_FX2
+  desc: in sound settings
+  user: core
+  <source>
+    *: none
+    swcodec: "f(x2)"
+  </source>
+  <dest>
+    *: none
+    swcodec: "f(x2)"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "f(x2)"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_SURROUND_METHOD2
+  desc: in sound settings
+  user: core
+  <source>
+    *: none
+    swcodec: "SIDE ONLY"
+  </source>
+  <dest>
+    *: none
+    swcodec: "SIDE ONLY"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "SIDE ONLY"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_SURROUND_MIX
+  desc: in sound settings
+  user: core
+  <source>
+    *: none
+    swcodec: "Dry / Wet Mix"
+  </source>
+  <dest>
+    *: none
+    swcodec: "Dry / Wet Mix"
+  </dest>
+  <voice>
+    *: none
+    swcodec: "Dry / Wet Mix"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_IBASSO_FREQ_SCALING_GOVERNOR
+  desc: in Settings -> General -> System -> Freq Scaling Governor
+  user: core
+  <source>
+    *: none
+    ibassodx50: "Freq Scaling Governor"
+    ibassodx90: "Freq Scaling Governor"
+  </source>
+  <dest>
+    *: none
+    ibassodx50: "Freq Scaling Governor"
+    ibassodx90: "Freq Scaling Governor"
+  </dest>
+  <voice>
+    *: none
+    ibassodx50: "Freq Scaling Governor"
+    ibassodx90: "Freq Scaling Governor"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_IBASSO_USB_MODE
+  desc: in Settings -> General -> System -> USB Mode
+  user: core
+  <source>
+    *: none
+    ibassodx50: "USB Mode"
+    ibassodx90: "USB Mode"
+  </source>
+  <dest>
+    *: none
+    ibassodx50: "USB Mode"
+    ibassodx90: "USB Mode"
+  </dest>
+  <voice>
+    *: none
+    ibassodx50: "USB Mode"
+    ibassodx90: "USB Mode"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_IBASSO_USB_MODE_MASS_STORAGE
+  desc: in Settings -> General -> System -> USB Mode: Mass Storage
+  user: core
+  <source>
+    *: none
+    ibassodx50: "Mass Storage"
+    ibassodx90: "Mass Storage"
+  </source>
+  <dest>
+    *: none
+    ibassodx50: "Mass Storage"
+    ibassodx90: "Mass Storage"
+  </dest>
+  <voice>
+    *: none
+    ibassodx50: "Mass Storage"
+    ibassodx90: "Mass Storage"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_IBASSO_USB_MODE_CHARGE
+  desc: in Settings -> General -> System -> USB Mode: Charge Only
+  user: core
+  <source>
+    *: none
+    ibassodx50: "Charge Only"
+    ibassodx90: "Charge Only"
+  </source>
+  <dest>
+    *: none
+    ibassodx50: "Charge Only"
+    ibassodx90: "Charge Only"
+  </dest>
+  <voice>
+    *: none
+    ibassodx50: "Charge Only"
+    ibassodx90: "Charge Only"
+  </voice>
+</phrase>
+<phrase>
+  id: LANG_IBASSO_USB_MODE_ADB
+  desc: in Settings -> General -> System -> USB Mode: Android Debug Bridge
+  user: core
+  <source>
+    *: none
+    ibassodx50: "Android Debug Bridge"
+    ibassodx90: "Android Debug Bridge"
+  </source>
+  <dest>
+    *: none
+    ibassodx50: "Android Debug Bridge"
+    ibassodx90: "Android Debug Bridge"
+  </dest>
+  <voice>
+    *: none
+    ibassodx50: "Android Debug Bridge"
+    ibassodx90: "Android Debug Bridge"
   </voice>
 </phrase>
