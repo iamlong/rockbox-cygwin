@@ -159,24 +159,12 @@ $(KEYSTORE):
 $(APK): $(TEMP_APK) $(BUILDDIR)/rockbox.zip $(KEYSTORE)
 endif
 	$(SILENT)rm -f $@
-<<<<<<< HEAD
-	$(SILENT)echo "SIGN rockbox-rcc-`git rev-parse --verify --short HEAD`-$(LCD_WIDTH)x$(LCD_HEIGHT).apk"
-	$(SILENT)jarsigner \
-		-keystore "$(KEYSTORE)" -storepass "rbtheme.5d6d.net" -keypass "rbtheme.5d6d.net" \
-		-signedjar $(TEMP_APK2) $(TEMP_APK) "rockboxkey" \
-		-sigalg MD5withRSA -digestalg SHA1
-	$(SILENT)echo "ZIPALIGN rockbox-rcc-`git rev-parse --verify --short HEAD`-$(LCD_WIDTH)x$(LCD_HEIGHT).apk"
-	$(SILENT)$(ZIPALIGN) -v 4 $(TEMP_APK2) $@ > /dev/null
-=======
-	$(call PRINTS,SIGN $(subst $(BUILDDIR)/,,$@))$(warning jarsigner \
-		-keystore "$(call convpath,$(KEYSTORE))" -storepass "android" -keypass "android" \
-		-signedjar $(call convpath,$(TEMP_APK2)) $(call convpath,$(TEMP_APK)) "androiddebugkey" \
-		-sigalg MD5withRSA -digestalg SHA1)	jarsigner \
+
+	$(call PRINTS,SIGN $(subst $(BUILDDIR)/,,$@))jarsigner \
 		-keystore "$(call convpath,$(KEYSTORE))" -storepass "android" -keypass "android" \
 		-signedjar $(call convpath,$(TEMP_APK2)) $(call convpath,$(TEMP_APK)) "androiddebugkey" \
 		-sigalg MD5withRSA -digestalg SHA1
-	$(SILENT)$(waring $(ZIPALIGN) -v 4 $(call convpath, $(TEMP_APK2)) $(call convpath,$@))$(ZIPALIGN) -v 4 $(call convpath, $(TEMP_APK2)) $(call convpath,$@) > /dev/null
->>>>>>> v6
+	$(SILENT)$(ZIPALIGN) -v 4 $(call convpath, $(TEMP_APK2)) $(call convpath,$@) > /dev/null
 
 $(DIRS):
 	$(SILENT)mkdir -p $@
