@@ -26,21 +26,24 @@ IMGDECFLAGS = $(PLUGINFLAGS) -DIMGDEC
 IMGVSUBDIRS := $(call preprocess, $(IMGVSRCDIR)/SUBDIRS)
 $(foreach dir,$(IMGVSUBDIRS),$(eval include $(dir)/$(notdir $(dir)).make))
 
-IMGDECLDFLAGS = -T$(PLUGINLINK_LDS) -Wl,--gc-sections -Wl,-Map,$(IMGVBUILDDIR)/$*.refmap
+IMGDECLDFLAGS = -T$(PLUGINLINK_LDS) -Wl,--gc-sections -Wl,-Map,$(call convpath, $(IMGVBUILDDIR)/$*.refmap)
 
 ifndef APP_TYPE
     IMGDEC_OUTLDS = $(IMGVBUILDDIR)/%.link
-    IMGDEC_OVLFLAGS = -T$(IMGVBUILDDIR)/$*.link -Wl,--gc-sections -Wl,-Map,$(IMGVBUILDDIR)/$*.map
+    IMGDEC_OVLFLAGS = -T$(IMGVBUILDDIR)/$*.link -Wl,--gc-sections -Wl,-Map,$(call convpath, $(IMGVBUILDDIR)/$*.map)
 else
-    IMGDEC_OVLFLAGS = $(PLUGINLDFLAGS) -Wl,-Map,$(IMGVBUILDDIR)/$*.map
+    IMGDEC_OVLFLAGS = $(PLUGINLDFLAGS) -Wl,-Map,$(call convpath, $(IMGVBUILDDIR)/$*.map)
 endif
 
 $(IMGVBUILDDIR)/%.ovl: $(IMGDEC_OUTLDS)
-	$(call PRINTS,LD $(@F))$(CC) $(IMGDECFLAGS) -o $(IMGVBUILDDIR)/$*.elf \
-		$(filter-out $(PLUGIN_CRT0),$(filter %.o, $^)) \
-		$(filter %.a, $+) \
+	$(call PRINTS,LD $(@F))$(warning $(CC) $(IMGDECFLAGS) -o $(call convpath, $(IMGVBUILDDIR)/$*.elf) \
+		$(call convpath, $(filter-out $(PLUGIN_CRT0),$(filter %.o, $^))) \
+		$(call convpath, $(filter %.a, $+)) \
+		-lgcc $(IMGDEC_OVLFLAGS))$(CC) $(IMGDECFLAGS) -o $(call convpath, $(IMGVBUILDDIR)/$*.elf) \
+		$(call convpath, $(filter-out $(PLUGIN_CRT0),$(filter %.o, $^))) \
+		$(call convpath, $(filter %.a, $+)) \
 		-lgcc $(IMGDEC_OVLFLAGS)
-	$(SILENT)$(call objcopy,$(IMGVBUILDDIR)/$*.elf,$@)
+	$(SILENT)$(call objcopy,$(call convpath, $(IMGVBUILDDIR)/$*.elf),$(call convpath, $@))
 
 # rule to create reference map for image decoder
 $(IMGVBUILDDIR)/%.refmap: $(APPSDIR)/plugin.h $(IMGVSRCDIR)/imageviewer.h $(PLUGINLINK_LDS) $(PLUGIN_LIBS)

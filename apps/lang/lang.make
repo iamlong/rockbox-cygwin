@@ -23,8 +23,7 @@ CLEANOBJS += $(BUILDDIR)/lang/max_language_size.h $(BUILDDIR)/lang/lang*
 DUMMY := $(shell mkdir -p $(BUILDDIR)/apps/lang)
 DUMMY := $(shell mkdir -p $(BUILDDIR)/lang)
 DUMMY := $(shell for f in `cat $(BUILDDIR)/apps/features`; do feat="$$feat:$$f" ; done; \
-             perl $(TOOLSDIR)/genlang -p=$(BUILDDIR)/lang -t=$$feat $(APPSDIR)/lang/$(LANGUAGE).lang)
-DUMMY := $(shell cp $(APPSDIR)/lang/english* $(BUILDDIR)/apps/lang)
+			perl $(TOOLSDIR)/genlang -p=$(BUILDDIR)/lang -t=$$feat $(APPSDIR)/lang/$(LANGUAGE).lang)
 DUMMY := $(shell cp $(APPSDIR)/lang/chinese* $(BUILDDIR)/apps/lang)
 DUMMY1 := $(shell ls -ln $(BUILDDIR)/apps/lang | awk '{print $$5-10}' | sort -n | tail -1)
 DUMMY := $(shell echo "\#define MAX_LANGUAGE_SIZE $(DUMMY1)" | cat > $(BUILDDIR)/lang/max_language_size.h)

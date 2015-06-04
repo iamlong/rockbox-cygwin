@@ -49,4 +49,4 @@ $(CHESSBOX_OBJDIR)/chessbox.ovl: $(CHESSBOX_OBJ) $(CHESSBOX_OUTLDS)
 # special pattern rule for compiling chessbox with extra flags
 $(CHESSBOX_OBJDIR)/%.o: $(CHESSBOX_SRCDIR)/%.c $(CHESSBOX_SRCDIR)/chessbox.make
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(dir $<) $(CHESSBOXFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(call convpath, $(dir $<)) $(CHESSBOXFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)

@@ -27,4 +27,4 @@ GIFFLAGS = $(IMGDECFLAGS) -O2
 # Compile PNG plugin with extra flags (adapted from ZXBox)
 $(GIFBUILDDIR)/%.o: $(GIFSRCDIR)/%.c $(GIFSRCDIR)/gif.make
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(dir $<) $(GIFFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(call convpath, $(dir $<)) $(GIFFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)

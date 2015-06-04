@@ -434,7 +434,7 @@ DUMMY := $(shell $(call asmdefs2file, $(ROOTDIR)/apps/core_asmdefs.c, $(BUILDDIR
 # when source and object are in different locations (normal):
 $(BUILDDIR)/%.o: $(ROOTDIR)/%.c
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(warning $(CC) $(CFLAGS) -c $(call convpath, $<) -o $(call convpath, $@))$(CC) $(CFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) $(CFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)
 
 $(BUILDDIR)/%.o: $(ROOTDIR)/%.S
 	$(SILENT)mkdir -p $(dir $@)

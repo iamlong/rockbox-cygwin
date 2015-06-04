@@ -94,16 +94,21 @@ $(MANIFEST): $(MANIFEST_SRC) $(DIRS)
 	$(call PRINTS,MANIFEST $(@F))sed -e 's/versionName="1.0"/versionName="$(SVNVERSION)"/;s/screenOrientation="portrait"/screenOrientation="$(LCDORIENTATION)"/' $(MANIFEST_SRC) > $(MANIFEST)
 
 $(R_JAVA) $(AP_): $(MANIFEST) $(RES) | $(DIRS)
+	$(SILENT)mkdir -p $(BUILDDIR)/gen/com.android.internal.telephony
 	$(call PRINTS,AIDL ITelephony.aidl)$(AIDL) \
 		-p$(call convpath, $(ANDROID_PLATFORM)/framework.aidl) \
 		-I$(call convpath, $(AIDL_SRC)) \
 		$(call convpath, $(AIDL_SRC)/com/android/internal/telephony/ITelephony.aidl) \
 		$(call convpath, $(BUILDDIR)/gen/com.android.internal.telephony/ITelephony.java)
-	$(call PRINTS,AAPT resources.ap_)$(AAPT) package -f -m \
-		-J $(convpath, $(BUILDDIR)/gen) -M $(call convpath, $(MANIFEST)) -S $(call convpath, $(ANDROID_DIR)/res) \
+	$(call PRINTS,AAPT resources.ap_) $(warning $(AAPT) package -f -m \
+		-J $(call convpath, $(BUILDDIR)/gen) -M $(call convpath, $(MANIFEST)) -S $(call convpath, $(ANDROID_DIR)/res) \
 		-I $(call convpath, $(ANDROID_PLATFORM)/android.jar) -F $(call convpath, $(AP_)) \
 		-I $(call convpath, $(UMENGSDKPATH)/umeng_sdk.jar) \
-		-I $(call convpath, $(UMENGSDKPATH)/annotations.jar) #注释@override
+		-I $(call convpath, $(UMENGSDKPATH)/annotations.jar)) $(AAPT) package -f -m \
+		-J $(call convpath, $(BUILDDIR)/gen) -M $(call convpath, $(MANIFEST)) -S $(call convpath, $(ANDROID_DIR)/res) \
+		-I $(call convpath, $(ANDROID_PLATFORM)/android.jar) -F $(call convpath, $(AP_)) \
+		-I $(call convpath, $(UMENGSDKPATH)/umeng_sdk.jar) \
+		-I $(call convpath, $(UMENGSDKPATH)/annotations.jar)#注释@override
 
 $(CLASSPATH)/$(PACKAGE_PATH)/R.class: $(R_JAVA)
 	$(call PRINTS,JAVAC $(subst $(ROOTDIR)/,,$<))javac -d $(BUILDDIR)/bin \

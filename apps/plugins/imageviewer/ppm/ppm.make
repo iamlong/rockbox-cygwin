@@ -24,4 +24,4 @@ $(PPMBUILDDIR)/ppm.ovl: $(PPM_OBJ)
 # special pattern rule for compiling image decoder with extra flags
 $(PPMBUILDDIR)/%.o: $(PPMSRCDIR)/%.c $(PPMSRCDIR)/ppm.make
 	$(SILENT)mkdir -p $(dir $@)
-	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(dir $<) $(IMGDECFLAGS) -c $< -o $@
+	$(call PRINTS,CC $(subst $(ROOTDIR)/,,$<))$(CC) -I$(call convpath, $(dir $<)) $(IMGDECFLAGS) -c $(call convpath, $<) -o $(call convpath, $@)

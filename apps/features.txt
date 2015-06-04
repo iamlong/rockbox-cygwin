@@ -102,6 +102,7 @@ multidrive_usb
 
 #if defined(HAVE_QUICKSCREEN)
 quickscreen
+android
 #endif
 
 #if CONFIG_TUNER != 0
